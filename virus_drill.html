@@ -1,0 +1,2294 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ウイルス横断">
+<meta name="theme-color" content="#f4eee5">
+<title>ウイルス横断ドリル</title>
+<link rel="manifest" href='data:application/manifest+json,{"name":"ウイルス横断ドリル","short_name":"ウイルス横断","display":"standalone","background_color":"%23f4eee5","theme_color":"%23f4eee5","start_url":"."}'>
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%239a4b25'/%3E%3Ccircle cx='90' cy='90' r='40' fill='none' stroke='%23f4eee5' stroke-width='9'/%3E%3Cg stroke='%23f4eee5' stroke-width='9' stroke-linecap='round'%3E%3Cpath d='M90 50V32M90 128v18M50 90H32m116 0h18M62 62L49 49m82 82l13 13M118 62l13-13M62 118l-13 13'/%3E%3C/g%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #f4eee5;
+    --surface: #ffffff;
+    --surface-2: #fbf6ef;
+    --border: #e7dcca;
+    --border-strong: #dccab0;
+    --primary: #9a4b25;
+    --primary-d: #7d3a18;
+    --primary-soft: #f5e8dd;
+    --text: #2c2018;
+    --muted: #93826f;
+    --green: #2f7a55;
+    --green-soft: #e3f1ea;
+    --red: #c0392b;
+    --red-soft: #fbe7e4;
+    --amber: #a9761c;
+    --amber-soft: #f8eeda;
+    --ui: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
+    --shadow-sm: 0 1px 2px rgba(80,55,30,.07);
+    --shadow: 0 2px 10px rgba(80,55,30,.09);
+    --r: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17130f;
+      --surface: #221c17;
+      --surface-2: #1c1713;
+      --border: #382e25;
+      --border-strong: #4a3d31;
+      --primary: #d9814f;
+      --primary-d: #e89a6c;
+      --primary-soft: #33241a;
+      --text: #ece3d8;
+      --muted: #9c8b79;
+      --green: #6cc194;
+      --green-soft: #1b2e25;
+      --red: #ef8477;
+      --red-soft: #33201d;
+      --amber: #d8ab5e;
+      --amber-soft: #2e2517;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.35);
+      --shadow: 0 2px 10px rgba(0,0,0,.4);
+    }
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text); font-family: var(--ui);
+    font-size: 16px; line-height: 1.7; -webkit-text-size-adjust: 100%;
+    padding-bottom: env(safe-area-inset-bottom);
+    overscroll-behavior-y: contain;
+  }
+  button { font-family: inherit; font-size: inherit; color: inherit; cursor: pointer; }
+
+  .wrap { max-width: 640px; margin: 0 auto; padding: 0 16px 48px; }
+
+  /* ---------- header ---------- */
+  header {
+    position: sticky; top: 0; z-index: 20;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: saturate(150%) blur(12px);
+    -webkit-backdrop-filter: saturate(150%) blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding-top: env(safe-area-inset-top);
+  }
+  .hbar { max-width: 640px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 12px; }
+  .htitle { font-weight: 700; font-size: 15px; letter-spacing: .02em; flex: 1; min-width: 0;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .hbtn { background: none; border: 1px solid var(--border-strong); border-radius: 999px;
+          padding: 4px 12px; font-size: 13px; color: var(--muted); }
+  .hbtn:active { background: var(--surface-2); }
+
+  /* ---------- home ---------- */
+  h2.sec { font-size: 12px; letter-spacing: .14em; color: var(--muted); font-weight: 700;
+           margin: 28px 0 10px; text-transform: uppercase; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r);
+          box-shadow: var(--shadow-sm); }
+
+  .hero { padding: 20px; margin-top: 18px; }
+  .hero .lead { font-size: 13px; color: var(--muted); margin: 0 0 4px; }
+  .hero .count { font-size: 30px; font-weight: 800; letter-spacing: -.01em; line-height: 1.2; }
+  .hero .count small { font-size: 14px; font-weight: 600; color: var(--muted); margin-left: 4px; }
+  .bar { height: 8px; border-radius: 99px; background: var(--border); overflow: hidden; display: flex; margin: 14px 0 6px; }
+  .bar i { display: block; height: 100%; }
+  .bar .b-new { background: var(--border-strong); }
+  .bar .b-lrn { background: var(--amber); }
+  .bar .b-ok  { background: var(--green); }
+  .legend { display: flex; gap: 14px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+  .legend span::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 5px; }
+  .legend .l-new::before { background: var(--border-strong); }
+  .legend .l-lrn::before { background: var(--amber); }
+  .legend .l-ok::before  { background: var(--green); }
+
+  .go { display: block; width: 100%; margin-top: 16px; padding: 16px; border: none; border-radius: 12px;
+        background: var(--primary); color: #fff; font-size: 17px; font-weight: 700; box-shadow: var(--shadow); }
+  .go:active { background: var(--primary-d); }
+  .go[disabled] { background: var(--border-strong); color: var(--muted); box-shadow: none; }
+  .go .sub { display: block; font-size: 12px; font-weight: 500; opacity: .85; margin-top: 2px; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tile { padding: 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface);
+          text-align: left; box-shadow: var(--shadow-sm); }
+  .tile:active { background: var(--surface-2); }
+  .tile b { display: block; font-size: 15px; }
+  .tile em { display: block; font-style: normal; font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .tile.miss b { color: var(--red); }
+  .tile[disabled] { opacity: .45; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { border: 1px solid var(--border-strong); background: var(--surface); border-radius: 999px;
+          padding: 7px 13px; font-size: 13px; color: var(--muted); }
+  .chip[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+
+  .plist { margin-top: 8px; }
+  .prow { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  .prow:last-child { border-bottom: none; }
+  .prow .nm { flex: 1; font-size: 14px; min-width: 0; }
+  .prow .mini { width: 84px; height: 6px; border-radius: 99px; background: var(--border); overflow: hidden; display: flex; flex: none; }
+  .prow .pct { width: 40px; text-align: right; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; flex: none; }
+
+  .note { font-size: 12.5px; color: var(--muted); line-height: 1.7; margin: 10px 2px 0; }
+
+  /* ---------- quiz ---------- */
+  .qtop { display: flex; align-items: center; gap: 10px; margin: 16px 0 12px; }
+  .dots { display: flex; gap: 4px; flex: 1; }
+  .dots i { height: 4px; flex: 1; border-radius: 99px; background: var(--border); }
+  .dots i.ok { background: var(--green); }
+  .dots i.ng { background: var(--red); }
+  .dots i.cur { background: var(--primary); }
+  .qmeta { font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; flex: none; }
+
+  .qcard { padding: 20px; }
+  .qtag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .06em;
+          color: var(--primary); background: var(--primary-soft); border-radius: 6px; padding: 3px 8px; margin-bottom: 12px; }
+  .qsrc { font-size: 11.5px; color: var(--muted); margin-bottom: 10px; }
+  .qtext { font-size: 19px; font-weight: 600; line-height: 1.65; letter-spacing: .005em; }
+  .qtext.sm { font-size: 17px; }
+
+  .oxrow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+  .oxbtn { padding: 22px 8px; border-radius: 14px; border: 2px solid var(--border-strong);
+           background: var(--surface); font-size: 30px; font-weight: 700; line-height: 1; box-shadow: var(--shadow-sm); }
+  .oxbtn.o { color: var(--green); }
+  .oxbtn.x { color: var(--red); }
+  .oxbtn:active { transform: scale(.97); }
+
+  .opts { display: flex; flex-direction: column; gap: 8px; margin-top: 18px; }
+  .opt { text-align: left; padding: 13px 14px; border-radius: 11px; border: 1.5px solid var(--border-strong);
+         background: var(--surface); font-size: 15.5px; display: flex; gap: 10px; align-items: center; }
+  .opt .box { width: 20px; height: 20px; border-radius: 6px; border: 2px solid var(--border-strong); flex: none; }
+  .opt[aria-pressed="true"] { border-color: var(--primary); background: var(--primary-soft); font-weight: 600; }
+  .opt[aria-pressed="true"] .box { background: var(--primary); border-color: var(--primary); position: relative; }
+  .opt[aria-pressed="true"] .box::after { content: '✓'; color: #fff; font-size: 13px; position: absolute;
+         inset: 0; display: flex; align-items: center; justify-content: center; line-height: 1; }
+  .opt.res-hit  { border-color: var(--green); background: var(--green-soft); }
+  .opt.res-miss { border-color: var(--red); background: var(--red-soft); }
+  .opt.res-over { border-color: var(--red); background: var(--red-soft); text-decoration: line-through; opacity: .8; }
+  .opt .mark { margin-left: auto; font-size: 12px; font-weight: 700; flex: none; }
+  .opt.res-hit .mark { color: var(--green); }
+  .opt.res-miss .mark, .opt.res-over .mark { color: var(--red); }
+
+  .act { width: 100%; margin-top: 16px; padding: 15px; border-radius: 12px; border: none;
+         background: var(--primary); color: #fff; font-size: 16px; font-weight: 700; }
+  .act:active { background: var(--primary-d); }
+  .act[disabled] { background: var(--border-strong); color: var(--muted); }
+  .act.ghost { background: var(--surface); color: var(--primary); border: 1.5px solid var(--primary); }
+
+  .recall-a { margin-top: 16px; padding: 16px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--border); }
+  .recall-a ul { margin: 0; padding-left: 1.15em; }
+  .recall-a li { margin: 5px 0; font-size: 15.5px; }
+  .recall-a li b { color: var(--primary); font-weight: 700; }
+  .selfrow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .selfrow button { padding: 15px 8px; border-radius: 12px; border: 1.5px solid var(--border-strong);
+                    background: var(--surface); font-weight: 700; font-size: 15px; }
+  .selfrow .yes { color: var(--green); border-color: var(--green); }
+  .selfrow .no  { color: var(--red); border-color: var(--red); }
+
+  .verdict { margin-top: 16px; padding: 14px 16px; border-radius: 12px; font-weight: 700; font-size: 16px;
+             display: flex; align-items: baseline; gap: 10px; }
+  .verdict.ok { background: var(--green-soft); color: var(--green); }
+  .verdict.ng { background: var(--red-soft); color: var(--red); }
+  .verdict > .vl { flex: none; white-space: nowrap; }
+  .verdict small { font-weight: 600; font-size: 13px; color: var(--text); opacity: .8; }
+  .expl { margin-top: 12px; padding: 14px 16px; background: var(--surface-2); border: 1px solid var(--border);
+          border-radius: 12px; font-size: 14.5px; line-height: 1.8; }
+  .expl b { color: var(--primary); }
+  .expl .lbl { display: block; font-size: 11px; letter-spacing: .1em; color: var(--muted); font-weight: 700; margin-bottom: 4px; }
+
+  .done { padding: 28px 20px; text-align: center; margin-top: 20px; }
+  .done .big { font-size: 40px; font-weight: 800; letter-spacing: -.02em; }
+  .done .big small { font-size: 16px; color: var(--muted); font-weight: 600; }
+  .done p { color: var(--muted); font-size: 14px; margin: 6px 0 0; }
+
+  /* ---------- matrix ---------- */
+  .tablewrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--r);
+               background: var(--surface); box-shadow: var(--shadow-sm); -webkit-overflow-scrolling: touch; }
+  .mcards { display: flex; flex-direction: column; gap: 8px; }
+  .mcard { background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+           padding: 12px 14px; box-shadow: var(--shadow-sm); }
+  .mcard .mh { display: flex; align-items: baseline; gap: 8px; }
+  .mcard .mn { font-weight: 700; font-size: 15px; flex: 1; }
+  .mcard .mf { font-size: 11px; color: var(--muted); border: 1px solid var(--border-strong);
+               border-radius: 99px; padding: 1px 8px; flex: none; }
+  .mcard .mattrs { font-size: 13px; margin-top: 5px; display: flex; flex-wrap: wrap; gap: 4px 10px; }
+  .mcard .mattrs span { white-space: nowrap; }
+  .mcard .mroute { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+  .mcard .mkey { font-size: 12.5px; margin-top: 7px; padding-top: 7px; border-top: 1px dashed var(--border);
+                 line-height: 1.65; }
+  .mempty { text-align: center; color: var(--muted); font-size: 14px; padding: 24px 0; }
+  @media (max-width: 700px) { .tablewrap { display: none; } }
+  @media (min-width: 701px) { .mcards { display: none; } }
+  table { border-collapse: collapse; font-size: 12.5px; min-width: 980px; width: 100%; }
+  th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; white-space: nowrap; }
+  td.key { white-space: normal; min-width: 220px; font-size: 12px; color: var(--muted); }
+  thead th { position: sticky; top: 0; background: var(--surface-2); z-index: 2; font-size: 11px;
+             letter-spacing: .06em; color: var(--muted); border-bottom: 1.5px solid var(--border-strong); }
+  tbody th { font-weight: 700; background: var(--surface); position: sticky; left: 0; z-index: 1;
+             border-right: 1px solid var(--border); font-size: 12.5px; }
+  tbody tr:active { background: var(--surface-2); }
+  .yes { color: var(--green); font-weight: 700; }
+  .no  { color: var(--red); font-weight: 700; }
+  .msearch { width: 100%; padding: 12px 14px; border-radius: 11px; border: 1px solid var(--border-strong);
+             background: var(--surface); font-size: 16px; color: var(--text); margin-bottom: 12px; }
+  .msearch::placeholder { color: var(--muted); }
+
+  /* ---------- study ---------- */
+  .sgroup { margin-top: 22px; }
+  .sgroup h3 { font-size: 11px; letter-spacing: .12em; color: var(--muted); margin: 0 0 8px; font-weight: 700; }
+  .srow { display: flex; align-items: center; gap: 10px; padding: 12px 14px; width: 100%; text-align: left;
+          background: var(--surface); border: 1px solid var(--border); border-radius: 11px;
+          margin-bottom: 6px; box-shadow: var(--shadow-sm); }
+  .srow:active { background: var(--surface-2); }
+  .srow .sn { flex: 1; font-size: 14.5px; font-weight: 600; min-width: 0; }
+  .srow .sc { font-size: 11.5px; color: var(--muted); flex: none; font-variant-numeric: tabular-nums; }
+  .srow .sbar { width: 46px; height: 5px; border-radius: 99px; background: var(--border); overflow: hidden; flex: none; }
+  .srow .sbar i { display: block; height: 100%; background: var(--green); }
+
+  .sec-h { margin: 18px 0 3px; font-size: 21px; font-weight: 800; letter-spacing: -.01em; line-height: 1.4; }
+  .sec-p { font-size: 12px; color: var(--muted); margin: 0 0 6px; }
+  .sec-src { font-size: 12px; color: var(--muted); margin: 0 0 16px; line-height: 1.7;
+             padding: 8px 11px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 9px; }
+  .sec-src .lbl { font-weight: 700; letter-spacing: .06em; font-size: 10.5px; margin-right: 6px; }
+  .sec-src b { color: var(--primary); }
+
+  .srcb { display: inline-flex; align-items: center; justify-content: center; min-width: 17px; height: 17px;
+          padding: 0 4px; margin-left: 3px; border-radius: 5px; font-size: 10.5px; font-weight: 700;
+          background: var(--primary-soft); color: var(--primary); font-variant-numeric: tabular-nums; }
+  .srcb.q { background: var(--amber-soft); color: var(--amber); padding: 0 5px; }
+  .srcs { flex: none; display: flex; align-items: center; }
+  .qsrc .srcb { margin-left: 4px; }
+  .blk { margin-bottom: 18px; }
+  .blk > h4 { font-size: 11px; letter-spacing: .12em; color: var(--muted); font-weight: 700; margin: 0 0 8px; }
+  .vgroup { margin-bottom: 12px; }
+  .vgroup .vl { font-size: 13.5px; font-weight: 700; margin-bottom: 6px; line-height: 1.6; }
+  .vlist { display: flex; flex-wrap: wrap; gap: 6px; }
+  .vlist span { font-size: 13px; background: var(--primary-soft); color: var(--primary);
+                border-radius: 7px; padding: 4px 9px; font-weight: 600; }
+  .qa, .oxitem { background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+                 padding: 13px 15px; margin-bottom: 8px; box-shadow: var(--shadow-sm); }
+  .qa .qq { font-weight: 700; font-size: 14.5px; margin-bottom: 8px; line-height: 1.65; }
+  .qa ul { margin: 0; padding-left: 1.15em; }
+  .qa li { font-size: 14px; margin: 4px 0; line-height: 1.75; }
+  .qa li b, .why b { color: var(--primary); }
+  .why { font-size: 13px; color: var(--muted); margin-top: 8px; padding-top: 8px;
+         border-top: 1px dashed var(--border); line-height: 1.75; }
+  .oxitem .st { font-size: 14.5px; line-height: 1.7; }
+  .oxitem .jd { font-weight: 800; margin-right: 6px; }
+  .oxitem .jd.o { color: var(--green); }
+  .oxitem .jd.x { color: var(--red); }
+  .oxitem .why { border-top: none; padding-top: 0; margin-top: 5px; }
+  .navpair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+  .navpair button { padding: 13px 8px; border-radius: 11px; border: 1px solid var(--border-strong);
+                    background: var(--surface); font-size: 13.5px; color: var(--muted); }
+  .navpair button[disabled] { opacity: .35; }
+  .selcount { text-align: center; font-size: 12.5px; color: var(--muted); margin-top: 10px; }
+  .selcount b { color: var(--primary); }
+
+  .studylink { display: block; width: 100%; margin-top: 10px; padding: 12px 14px; border-radius: 11px;
+               border: 1px dashed var(--border-strong); background: transparent; color: var(--muted);
+               font-size: 13.5px; text-align: left; line-height: 1.6; }
+  .studylink:active { background: var(--surface-2); }
+  .studylink b { color: var(--primary); font-weight: 700; }
+  .resumebar { display: block; width: 100%; margin: 18px 0 0; padding: 13px 15px; border-radius: 11px;
+               border: none; background: var(--primary); color: #fff; font-size: 14.5px; font-weight: 700;
+               text-align: left; box-shadow: var(--shadow); }
+  .resumebar:active { background: var(--primary-d); }
+  .resumebar span { display: block; font-size: 12px; font-weight: 500; opacity: .85; margin-top: 2px; }
+
+  /* ---------- virus sheet ---------- */
+  .peekrow { margin-top: 10px; padding: 12px 14px; border-radius: 11px; border: 1px dashed var(--border-strong); }
+  .peekrow .lbl { display: block; font-size: 11px; letter-spacing: .1em; color: var(--muted);
+                  font-weight: 700; margin-bottom: 8px; }
+  .peekrow .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .vchip { font-size: 13px; background: var(--surface-2); border: 1px solid var(--border-strong);
+           color: var(--text); border-radius: 8px; padding: 5px 10px; font-weight: 600; }
+  .vchip::after { content: ' ›'; color: var(--primary); font-weight: 700; }
+  .vchip:active { background: var(--primary-soft); border-color: var(--primary); }
+  .vchip.dead { opacity: .45; }
+  .vchip.dead::after { content: ''; }
+  .vlist .vchip { background: var(--primary-soft); border-color: transparent; color: var(--primary); }
+
+  .sheet { position: fixed; inset: 0; z-index: 60; display: flex; align-items: flex-end; }
+  .sheet .bg { position: absolute; inset: 0; background: rgba(20,12,6,.42); }
+  .sheet .card { position: relative; width: 100%; max-width: 640px; margin: 0 auto;
+                 background: var(--surface); border-radius: 18px 18px 0 0; padding: 8px 18px 22px;
+                 max-height: 82vh; overflow-y: auto; box-shadow: 0 -6px 28px rgba(0,0,0,.22);
+                 padding-bottom: calc(22px + env(safe-area-inset-bottom));
+                 animation: sheetup .18s ease-out; }
+  @keyframes sheetup { from { transform: translateY(14px); opacity: .4 } to { transform: none; opacity: 1 } }
+  .sheet .grip { width: 38px; height: 4px; border-radius: 99px; background: var(--border-strong); margin: 6px auto 14px; }
+  .sheet h5 { margin: 0; font-size: 19px; font-weight: 800; letter-spacing: -.01em; line-height: 1.4; }
+  .sheet .fam { font-size: 12px; color: var(--muted); margin: 3px 0 14px; }
+  .srowline { display: flex; gap: 10px; padding: 9px 0; border-top: 1px solid var(--border); font-size: 14px; }
+  .srowline dt { flex: none; width: 76px; color: var(--muted); font-size: 12px; padding-top: 2px; }
+  .srowline dd { margin: 0; flex: 1; line-height: 1.65; }
+  .sheet .keyline { margin-top: 12px; padding: 12px 14px; background: var(--surface-2); border-radius: 11px;
+                    font-size: 13.5px; line-height: 1.8; }
+  .sheet-src { margin-top: 10px; padding: 9px 12px; border: 1px dashed var(--border-strong); border-radius: 9px;
+               font-size: 12.5px; color: var(--muted); line-height: 1.7; }
+  .sheet-src .lbl { font-weight: 700; letter-spacing: .06em; font-size: 10.5px; margin-right: 6px; }
+  .sheet-src b { color: var(--primary); }
+  .mcard .mh .srcs { margin-right: auto; }
+  thead th, tbody th { white-space: nowrap; }
+  .sheet .close { width: 100%; margin-top: 16px; padding: 13px; border-radius: 11px;
+                  border: 1px solid var(--border-strong); background: var(--surface); color: var(--muted); font-size: 14px; }
+
+  .hide { display: none !important; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hbar">
+    <button class="hbtn hide" id="back">← 戻る</button>
+    <div class="htitle" id="htitle">ウイルス横断ドリル</div>
+  </div>
+</header>
+
+<div class="wrap">
+  <!-- ============ HOME ============ -->
+  <div id="view-home">
+    <div class="card hero">
+      <p class="lead">いま出題できる問題</p>
+      <div class="count" id="dueCount">–<small>問</small></div>
+      <div class="bar" id="bar"><i class="b-ok" style="width:0"></i><i class="b-lrn" style="width:0"></i><i class="b-new" style="width:100%"></i></div>
+      <div class="legend">
+        <span class="l-ok" id="lgOk">定着 0</span>
+        <span class="l-lrn" id="lgLrn">学習中 0</span>
+        <span class="l-new" id="lgNew">未習 0</span>
+      </div>
+      <button class="go" id="start">はじめる<span class="sub" id="startSub">10問 ／ 約2分</span></button>
+    </div>
+
+    <h2 class="sec">モード</h2>
+    <div class="grid2">
+      <button class="tile" data-mode="ox"><b>〇× 瞬発</b><em>ひっかけ肢を即断</em></button>
+      <button class="tile" data-mode="pick"><b>ウイルス選択</b><em>正誤・個数をランダム出題</em></button>
+      <button class="tile" data-mode="recall"><b>キーワード想起</b><em>記述の必須語を思い出す</em></button>
+      <button class="tile miss" data-mode="miss" id="tileMiss"><b>ミス箱</b><em id="missSub">0問</em></button>
+    </div>
+
+    <h2 class="sec">読んで覚える</h2>
+    <div class="grid2">
+      <button class="tile" id="tileStudy"><b>教材</b><em id="studySub">節ごとに読む</em></button>
+      <button class="tile" id="tileMatrix"><b>縦串マトリクス</b><em id="matrixSub">ウイルス一覧</em></button>
+    </div>
+
+    <h2 class="sec">出題範囲</h2>
+    <div class="chips" id="partChips"></div>
+
+    <h2 class="sec">進捗</h2>
+    <div class="card plist" id="partProgress"></div>
+
+    <p class="note" id="footnote"></p>
+    <p class="note">
+      <b>ホーム画面に置く：</b>iPhone の Safari でこのファイルを開き、共有 → 「ホーム画面に追加」。
+      通信は一切しないので、機内モードでも動きます。進捗は端末内に保存されます。
+    </p>
+    <p class="note"><button class="chip" id="reset">進捗をリセット</button></p>
+  </div>
+
+  <!-- ============ QUIZ ============ -->
+  <div id="view-quiz" class="hide">
+    <div class="qtop">
+      <div class="dots" id="dots"></div>
+      <div class="qmeta" id="qmeta"></div>
+    </div>
+    <div class="card qcard" id="qcard"></div>
+    <div id="afterArea"></div>
+  </div>
+
+  <!-- ============ STUDY (list) ============ -->
+  <div id="view-study" class="hide">
+    <input class="msearch" id="ssearch" type="search" placeholder="節名・キーワードで絞り込み" autocomplete="off" style="margin-top:18px">
+    <div id="slist"></div>
+  </div>
+
+  <!-- ============ SECTION (detail) ============ -->
+  <div id="view-section" class="hide">
+    <div id="sbody"></div>
+  </div>
+
+  <!-- ============ MATRIX ============ -->
+  <div id="view-matrix" class="hide">
+    <input class="msearch" id="msearch" type="search" placeholder="ウイルス名・科・キーワードで絞り込み" autocomplete="off" style="margin-top:18px">
+    <div class="mcards" id="mcards"></div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>ウイルス</th><th>科</th><th>ゲノム</th><th>エンベ</th><th>複製部位</th><th>指向性</th><th>主な感染経路</th><th>試験のキー</th></tr></thead>
+        <tbody id="mbody"></tbody>
+      </table>
+    </div>
+    <p class="note">
+      ゲノム・エンベロープ・複製部位・指向性・感染経路は標準的なウイルス学の基本事項で表を埋めていますが、
+      <b>出題（クイズ側）は元文書の記述のみ</b>から作っています。
+    </p>
+  </div>
+</div>
+
+<div id="sheet" class="sheet hide">
+  <div class="bg"></div>
+  <div class="card"><div class="grip"></div><div id="sheetBody"></div></div>
+</div>
+
+<script>
+/* =========================================================================
+   DATA  —  virus_characteristic_classification.md 全36節＋記述コラム
+   t: 'ox'   {q, a(true=〇), e}
+   t: 'pick' {q, ok[], ng[], e}
+   t: 'recall'{q, a[], e}
+   p: 0-5 (部)   s: 節ラベル
+   ========================================================================= */
+const PARTS = [
+  '第1部 ゲノム構造・物理的特性',
+  '第2部 感染・伝播経路',
+  '第3部 免疫応答・診断特性',
+  '第4部 宿主・病態・発がん機序',
+  '第5部 ワクチン・治療・根絶',
+  '第6部 臓器指向性（トロピズム）',
+  '第7部 臨床兆候による鑑別',
+  '横断・ひっかけ手口',
+  '記述コラム 5大分子機序'
+];
+const PARTS_SHORT = ['第1部','第2部','第3部','第4部','第5部','第6部','第7部','手口','コラム'];
+
+const ITEMS = [
+
+/* ---------------- 第1部 ---------------- */
+// §1 ssDNA
+{p:0,s:'§1 一本鎖DNA',t:'pick',q:'一本鎖DNA（ssDNA）をゲノムに持つのはどれか（すべて選べ）',
+ ok:['ヒトパルボウイルスB19','アデノ随伴ウイルス（AAV）'],
+ ng:['アデノウイルス','単純ヘルペスウイルス','ヒトパピローマウイルス','ポックスウイルス','B型肝炎ウイルス','JCウイルス'],
+ e:'病原DNAウイルスは<b>原則すべて二本鎖DNA</b>。<b>パルボウイルス科だけが唯一の例外</b>で一本鎖DNA（一本鎖線状DNAゲノム）。'},
+{p:0,s:'§1 一本鎖DNA',t:'ox',q:'パルボウイルスは二本鎖DNAウイルスである。',a:false,
+ e:'×。<b>一本鎖DNA</b>。「DNAウイルス＝二本鎖」という一般論を逆手に取った最頻出のひっかけ。'},
+{p:0,s:'§1 一本鎖DNA',t:'ox',q:'アデノ随伴ウイルス（AAV）ベクターは、一本鎖DNAをゲノムとして持つ。',a:true,
+ e:'〇。AAVはパルボウイルス科。遺伝子治療ベクター問題での最頻出の正答肢。'},
+
+// §2 dsRNA
+{p:0,s:'§2 二本鎖RNA',t:'pick',q:'二本鎖RNA（dsRNA）をゲノムに持つのはどれか（すべて選べ）',
+ ok:['ロタウイルス'],
+ ng:['インフルエンザウイルス','ノロウイルス','ポリオウイルス','C型肝炎ウイルス','麻疹ウイルス','HIV'],
+ e:'病原RNAウイルスは原則すべて一本鎖RNA。<b>レオウイルス科（ロタ）のみが唯一の例外</b>で二本鎖RNA。'},
+{p:0,s:'§2 二本鎖RNA',t:'ox',q:'ロタウイルスのゲノムは一本鎖RNAである。',a:false,e:'×。<b>二本鎖RNA（11分節）</b>。'},
+{p:0,s:'§2 二本鎖RNA',t:'ox',q:'インフルエンザウイルスは、分節化したマイナス鎖一本鎖DNAをゲノムに持つ。',a:false,
+ e:'×。<b>RNA</b>である（マイナス鎖一本鎖RNA・8分節）。DNA／RNA、一本鎖／二本鎖の入れ替えひっかけに注意。'},
+
+// §3 分節ゲノム
+{p:0,s:'§3 分節ゲノム',t:'pick',q:'分節ゲノムを持ち、遺伝子再集合（リアソートメント）を起こしうるのはどれか（すべて選べ）',
+ ok:['ロタウイルス','インフルエンザウイルス','ラッサウイルス','LCMV','SFTSウイルス','クリミア・コンゴ出血熱ウイルス'],
+ ng:['麻疹ウイルス','HIV','コロナウイルス','ポリオウイルス','C型肝炎ウイルス','狂犬病ウイルス'],
+ e:'レオ（ロタ）・オルソミクソ（インフル）・アレナ（ラッサ, LCMV）・ブニヤ目（SFTS, クリミア・コンゴ）。'},
+{p:0,s:'§3 分節ゲノム',t:'recall',q:'各科の「分節数」を言えるか？（レオ／オルソミクソ／アレナ／ブニヤ目）',
+ a:['レオウイルス科（ロタ）＝<b>11分節</b>の二本鎖RNA','オルソミクソ（インフルエンザ）＝<b>8分節</b>のマイナス鎖一本鎖RNA','アレナ（ラッサ, LCMV）＝<b>2分節</b>一本鎖RNA','ブニヤ目（SFTS, クリミア・コンゴ）＝<b>3分節</b>一本鎖RNA'],
+ e:'分節数の各論は客観式でピンポイントに問われる。11／8／2／3 をセットで暗記。'},
+{p:0,s:'§3 分節ゲノム',t:'recall',q:'記述：パンデミックインフルエンザの発生機構を2つ述べよ。',
+ a:['<b>①点変異の蓄積</b>：動物で流行するウイルスが点変異を蓄積して<b>ヒトに感染できるように変化</b>し、新型として人類に侵入する','<b>②遺伝子再集合（リアソートメント）</b>：異なる複数の亜型が<b>同一細胞に同時感染</b>すると細胞内で<b>分節ゲノムが入れ替わり</b>、これまでと異なるゲノム集合体の新型が突如出現する','<b>②が主要機序</b>。まれにしか起きないが、点変異を徐々に蓄積するより<b>急激にゲノム情報が変化する</b>ため','人類に未知のHA・NAをもつ新型には<b>集団免疫がまったくない</b>ため、大流行＝パンデミックに至る'],
+ e:'※旧版で「必須キーワード3つ」としていた<b>遺伝子再集合／分節のシャッフル／不連続抗原変異</b>は、講義スライドでは<b>同一現象の3つの呼び名</b>として並記されているもの。並べても1つの機序にしかならないので、上の①②の対で書くこと。'},
+{p:0,s:'§3 分節ゲノム',t:'recall',q:'連続抗原変異と不連続抗原変異を対比せよ。それぞれ何を引き起こすか。',
+ a:['<b>連続抗原変異（antigenic drift）</b>… <b>点変異の蓄積</b>により、同一亜型のままHAとNAの抗原性が<b>徐々に</b>変化する。頻繁に起こるため、ほとんどのヒトが基礎免疫をもつのに<b>季節性インフルエンザが毎年流行</b>する','<b>不連続抗原変異（antigenic shift）</b>… <b>遺伝子再集合</b>により<b>急激・不連続に</b>抗原性が変わる。まれだが<b>パンデミック</b>につながる'],
+ e:'<b>ドリフト＝点変異＝毎年の季節流行／シフト＝再集合＝パンデミック</b>。この対応が本命の対比。'},
+{p:0,s:'§3 分節ゲノム',t:'ox',q:'季節性インフルエンザが毎年流行するのは、遺伝子再集合（不連続抗原変異）が毎年起きているからである。',a:false,
+ e:'×。毎年の季節流行は<b>点変異の蓄積による連続抗原変異（ドリフト）</b>による。遺伝子再集合はまれで、起きるとパンデミックになる。'},
+{p:0,s:'§3 分節ゲノム',t:'ox',q:'ラッサウイルスのゲノムは2分節である。',a:true,e:'〇。アレナウイルス科＝2分節。'},
+
+// §4 逆転写
+{p:0,s:'§4 逆転写酵素',t:'pick',q:'複製サイクルの中で逆転写を行うのはどれか（すべて選べ）',
+ ok:['HIV-1','HTLV-1','B型肝炎ウイルス'],
+ ng:['C型肝炎ウイルス','A型肝炎ウイルス','E型肝炎ウイルス','アデノウイルス','ヒトパピローマウイルス','インフルエンザウイルス'],
+ e:'レトロウイルス科（HIV, HTLV-1）と<b>ヘパドナウイルス科（HBV）</b>。HBVは<b>DNAウイルスでありながら</b>プレゲノムRNAを鋳型に逆転写する（レトロイドウイルス）。'},
+{p:0,s:'§4 逆転写酵素',t:'ox',q:'C型肝炎ウイルスは逆転写酵素をもつレトロウイルスである。',a:false,
+ e:'×。HCVはフラビウイルス科のプラス鎖RNAウイルスで、<b>逆転写酵素を絶対にコードしない</b>。'},
+{p:0,s:'§4 逆転写酵素',t:'ox',q:'レトロウイルスはDNAウイルスである。',a:false,
+ e:'×。ゲノムは<b>一本鎖プラス鎖RNA</b>。逆転写でDNA（プロウイルス）を作るだけ。'},
+{p:0,s:'§4 逆転写酵素',t:'ox',q:'B型肝炎ウイルスは逆転写酵素活性をもつ。',a:true,
+ e:'〇。<b>DNAウイルスなのに</b>逆転写する、という整合性を突くのが肝炎ウイルス最頻出問題。'},
+
+// §5 ノンエンベロープ
+{p:0,s:'§5 ノンエンベロープ',t:'pick',q:'エンベロープを<u>もたない</u>のはどれか（すべて選べ）',
+ ok:['アデノウイルス','ヒトパピローマウイルス','JCウイルス','ヒトパルボウイルスB19','ノロウイルス','ロタウイルス','ポリオウイルス','ライノウイルス','A型肝炎ウイルス','E型肝炎ウイルス'],
+ ng:['B型肝炎ウイルス','C型肝炎ウイルス','インフルエンザウイルス','麻疹ウイルス','サイトメガロウイルス','HIV','狂犬病ウイルス','デングウイルス'],
+ e:'アデノ・パピローマ・ポリオーマ・パルボ・カリシ（ノロ）・レオ（ロタ）・ピコルナ（ポリオ, ライノ, コクサッキー, HAV）・HEV。'},
+{p:0,s:'§5 ノンエンベロープ',t:'recall',q:'記述：下痢を起こすウイルスにエンベロープが存在しない理由を説明せよ。',
+ a:['腸管に到達するには<b>胃酸</b>と、強力な<b>界面活性剤（脂質溶解作用）として働く胆汁酸</b>の中を、不活化されずに通過する必要がある','よって<b>酸・乾燥・界面活性剤・脂質溶解剤に耐性のあるノンエンベロープ構造</b>をとる'],
+ e:'HAV・HEV・ノロ・ロタ・エンテロなど<b>経口感染／下痢症の主要ウイルスの大部分</b>がノンエンベロープ。「胆汁酸＝界面活性剤」が得点キーワード。'},
+{p:0,s:'§5 ノンエンベロープ',t:'ox',q:'ノロウイルス・アデノウイルスの不活化には70%エタノールを使用する。',a:false,
+ e:'×。ノンエンベロープはアルコール抵抗性で<b>不活化できない</b>。<b>次亜塩素酸ナトリウム</b>、または<b>85℃以上1分以上の加熱</b>を要する。'},
+
+// §6 エンベロープあり
+{p:0,s:'§6 エンベロープあり',t:'pick',q:'エンベロープを<u>もつ</u>のはどれか（すべて選べ）',
+ ok:['麻疹ウイルス','サイトメガロウイルス','インフルエンザウイルス','B型肝炎ウイルス','C型肝炎ウイルス','HIV','エボラウイルス','狂犬病ウイルス','SFTSウイルス','天然痘ウイルス'],
+ ng:['ノロウイルス','アデノウイルス','ロタウイルス','ポリオウイルス','A型肝炎ウイルス','E型肝炎ウイルス','ヒトパピローマウイルス','ヒトパルボウイルスB19'],
+ e:'出芽時に宿主膜（細胞膜・小胞体・ゴルジ体）由来の脂質二重膜をかぶる。<b>石鹸・70%エタノールで脂質膜が溶けると受容体結合能を失い容易に不活化</b>。'},
+{p:0,s:'§6 エンベロープあり',t:'ox',q:'C型肝炎ウイルスはノンエンベロープウイルスである。',a:false,
+ e:'×。<b>エンベロープをもつ</b>のでエタノールが有効。'},
+{p:0,s:'§6 エンベロープあり',t:'ox',q:'B型肝炎ウイルスは比較的アルコールへの抵抗性が高いが、エンベロープを有する。',a:true,e:'〇。'},
+
+// §7 細胞質で複製するDNAウイルス
+{p:0,s:'§7 細胞質複製DNAウイルス',t:'pick',q:'DNAウイルスでありながら細胞質で複製するのはどれか（すべて選べ）',
+ ok:['天然痘ウイルス','エムポックスウイルス','伝染性軟属腫ウイルス'],
+ ng:['単純ヘルペスウイルス','アデノウイルス','ヒトパピローマウイルス','B型肝炎ウイルス','JCウイルス','ヒトパルボウイルスB19'],
+ e:'すべて<b>ポックスウイルス科</b>。'},
+{p:0,s:'§7 細胞質複製DNAウイルス',t:'ox',q:'DNAウイルスはすべて核内でゲノム複製を行う。',a:false,
+ e:'×。<b>ポックスウイルス科は細胞質で複製</b>する。'},
+{p:0,s:'§7 細胞質複製DNAウイルス',t:'recall',q:'記述：ポックスウイルスがDNAウイルスでありながら細胞質で複製可能な理由。',
+ a:['全長220–450nmと<b>極めて巨大</b>で、複製に必要な各種酵素を自身でコードし粒子内に<b>持参している</b>','とくに<b>自前のDNA依存性RNAポリメラーゼ</b>を持つため、宿主の核機能を借りずに細胞質内で複製を完結できる'],
+ e:'通常のDNAウイルスが核に入るのは宿主のDNA依存性RNAポリメラーゼ等を借りるため。ポックスはそれが要らない。'},
+
+// §8 核内で複製するRNAウイルス
+{p:0,s:'§8 核内複製RNAウイルス',t:'pick',q:'RNAウイルスでありながら核内で複製・転写を行うのはどれか（すべて選べ）',
+ ok:['インフルエンザウイルス','HIV','HTLV-1'],
+ ng:['ポリオウイルス','C型肝炎ウイルス','麻疹ウイルス','ノロウイルス','E型肝炎ウイルス','コロナウイルス','ロタウイルス'],
+ e:'RNAウイルスは原則すべて細胞質で完結（自前のRNA依存性RNAポリメラーゼを使うため）。例外はこの2科。'},
+{p:0,s:'§8 核内複製RNAウイルス',t:'recall',q:'インフルエンザとレトロウイルスが「核に入る」理由は、それぞれ何が違うか？',
+ a:['レトロウイルス：逆転写したDNAを<b>宿主ゲノム染色体に統合（プロウイルス化）</b>する必要があるため','インフルエンザ：ゲノムの転写・複製に宿主核内の機構を直接利用するため'],
+ e:'「両方とも核」で終わらせず、目的が違う点まで書けると記述で差がつく。'},
+{p:0,s:'§8 核内複製RNAウイルス',t:'ox',q:'インフルエンザウイルスのゲノム複製および転写は、宿主細胞の細胞質内で行われる。',a:false,
+ e:'×。<b>例外的に核内</b>で行われる。'},
+{p:0,s:'§8 核内複製RNAウイルス',t:'ox',q:'E型肝炎ウイルスは核内に移行して複製する。',a:false,
+ e:'×。RNAウイルスであり<b>細胞質内で生活環が完結</b>する。'},
+
+// §9 DNA/RNA 大分類（DNAウイルスを暗記し、残りは全部RNAとして処理する）
+{p:0,s:'§9 DNA/RNA 大分類',t:'recall',q:'病原DNAウイルスの全7科を挙げよ。またRNAウイルスの見分け方は？',
+ a:['<b>パルボ</b>ウイルス科（B19, AAV）','<b>ヘパドナ</b>ウイルス科（HBV）','<b>パピローマ</b>ウイルス科（HPV）','<b>ポリオーマ</b>ウイルス科（JC）','<b>アデノ</b>ウイルス科','<b>ヘルペス</b>ウイルス科（HSV, VZV, CMV, EBV, HHV-6/7/8）','<b>ポックス</b>ウイルス科（天然痘, エムポックス, 伝染性軟属腫）','→ <b>この7科を暗記し、それ以外はすべてRNAウイルスと処理する</b>のが最も確実'],
+ e:'「パ・ヘ・パ・ポ・ア・ヘ・ポ」。DNA/RNAの入れ替えは毎年出るので、DNA側だけを完全に覚えて消去法で処理する。'},
+{p:0,s:'§9 DNA/RNA 大分類',t:'pick',q:'DNAウイルスはどれか（すべて選べ）',
+ ok:['ヒトパルボウイルスB19','B型肝炎ウイルス','ヒトパピローマウイルス','JCウイルス','アデノウイルス','単純ヘルペスウイルス','サイトメガロウイルス','天然痘ウイルス'],
+ ng:['C型肝炎ウイルス','HIV','インフルエンザウイルス','麻疹ウイルス','ロタウイルス','ノロウイルス','ポリオウイルス','狂犬病ウイルス','HTLV-1'],
+ e:'DNAは7科のみ（パルボ・ヘパドナ・パピローマ・ポリオーマ・アデノ・ヘルペス・ポックス）。<b>HBVはDNA</b>、<b>HCVはRNA</b>の対比が最頻出。'},
+{p:0,s:'§9 DNA/RNA 大分類',t:'recall',q:'DNAウイルス側・RNAウイルス側それぞれの「例外」を挙げよ。',
+ a:['【DNA側】<b>パルボ</b>＝唯一の一本鎖DNA（§1）／<b>ヘパドナ(HBV)</b>＝DNAなのに逆転写酵素をもつ（§4）／<b>ポックス</b>＝唯一、細胞質で複製する（§7）','【RNA側】<b>レオ(ロタ)</b>＝唯一の二本鎖RNA（§2）／<b>レトロ(HIV, HTLV-1)</b>＝RNAなのに逆転写酵素をもつ（§4）／<b>オルソミクソ(インフルエンザ)</b>＝例外的に核内で複製（§8）'],
+ e:'例外は<b>DNA側3つ・RNA側3つ</b>の計6つだけ。ここを押さえると§1〜§8が一本につながる。'},
+{p:0,s:'§9 DNA/RNA 大分類',t:'ox',q:'ヒトパピローマウイルスはRNAウイルスである。',a:false,e:'×。<b>パピローマウイルス科＝DNAウイルス</b>（二本鎖DNA）。'},
+{p:0,s:'§9 DNA/RNA 大分類',t:'ox',q:'B型肝炎ウイルスはDNAウイルス、C型肝炎ウイルスはRNAウイルスである。',a:true,
+ e:'〇。<b>B＝DNA（ヘパドナ）／C＝RNA（フラビ）</b>。この違いが、Integrationの有無・cccDNA・DAAで根治できるかの全部を決める。'},
+
+// §10 微生物としてのウイルスの特徴
+{p:0,s:'§10 微生物としてのウイルス',t:'recall',q:'記述：微生物の中でのウイルスの特徴を、最低4つ挙げよ。',
+ a:['粒子は<b>ゲノム核酸とそれを包む蛋白質の外殻のみ</b>で構成される（細胞を単位としない）','<b>エネルギー産生系や蛋白質合成系（代謝機構）をもたない</b>ため、細菌のように人工培地では増殖しない','宿主細胞に感染していない間は<b>生物として活動せず増殖しない</b>','粒子は核酸として<b>DNAまたはRNAのどちらか一方しかもたない</b>','感染すると<b>宿主細胞の代謝機構を利用して</b>大量に増殖する','<b>偏性細胞内寄生体</b>であり、生きた細胞の中でのみ増殖する'],
+ e:'記述で「最低4つ挙げよ」として出題実績あり。「細胞を単位としない／代謝系をもたない／核酸は一方のみ／偏性細胞内寄生体」の4つが書ければ十分。'},
+{p:0,s:'§10 微生物としてのウイルス',t:'recall',q:'なぜウイルスは抗生物質で治療できないのか。',
+ a:['<b>抗生物質は、宿主と異なる細菌特有の代謝機構を標的</b>としている','ウイルスは<b>宿主細胞の機構を利用して複製する</b>ため、ウイルスに特異的な代謝系はごく僅かしかない','そのためウイルスの代謝系だけを特異的に阻害することが困難で、抗ウイルス薬の開発は抗生物質より遅れた（§49）'],
+ e:'「かぜに抗生物質」が無効な理由でもある。§49（抗ウイルス薬）の前提になる考え方。'},
+{p:0,s:'§10 微生物としてのウイルス',t:'ox',q:'ウイルスは単独で増殖可能である。',a:false,
+ e:'×。<b>偏性細胞内寄生体</b>であり、増殖には生きた宿主細胞が必要。'},
+{p:0,s:'§10 微生物としてのウイルス',t:'ox',q:'ウイルスと細菌の最大の違いは、その大きさである。',a:false,
+ e:'×。一般にウイルスは細菌より小さいが<b>巨大ウイルスもある</b>。本質的な違いは<b>細胞を単位とせず代謝機構をもたない（偏性細胞内寄生体）</b>点。'},
+
+// §11 子孫ウイルスの放出様式
+{p:0,s:'§11 子孫ウイルスの放出様式',t:'recall',q:'エンベロープの有無で、子孫ウイルスの放出過程はどう違うか。',
+ a:['<b>エンベロープウイルス</b>：細胞内でヌクレオカプシドを形成後、<b>細胞膜・小胞体膜・ゴルジ体膜など宿主由来の膜を被って</b>放出（<b>出芽</b>）する','<b>ノンエンベロープウイルス</b>：ヌクレオカプシドがそのまま感染性ビリオンとなるため、<b>細胞内に蓄積して細胞を破壊し</b>放出される'],
+ e:'エンベロープの由来（§6）と、細胞傷害の出方の違いが1枚でつながる。ノンエンベロープが細胞破壊型＝CPEを起こしやすい理由でもある。'},
+{p:0,s:'§11 子孫ウイルスの放出様式',t:'ox',q:'ノンエンベロープウイルスは、宿主細胞膜を被って出芽することで放出される。',a:false,
+ e:'×。それは<b>エンベロープウイルス</b>。ノンエンベロープは<b>細胞内に蓄積して細胞を破壊して</b>放出される。'},
+{p:0,s:'§11 子孫ウイルスの放出様式',t:'recall',q:'ウイルスが引き起こす宿主細胞の変化を2つに大別せよ。',
+ a:['<b>①一般的</b>：ウイルスの大量増殖による<b>細胞死滅</b>（円形化・細胞融合を経て死滅）が組織障害と関係する','<b>②一部</b>：CPEを起こさず持続感染・潜伏感染し、<b>感染による免疫応答</b>や<b>がん化（細胞の不死化）</b>が障害性と関係する','※がんの発生原因の<b>9〜18%程度</b>がウイルス感染によると推定される'],
+ e:'§28（CPEを示さないLCMV）と§31（発がん）が、この②に当たる。'},
+
+// §12 科レベルの共通点
+{p:0,s:'§12 科レベルの共通点',t:'recall',q:'ヘルペスウイルス科に共通する特徴を述べよ。',
+ a:['<b>潜伏感染と再活性化</b>を必ず起こす','潜伏中は<b>ウイルス粒子の産生は停止</b>し、ゲノムは<b>環状のエピソーム</b>として細胞内に存在','ゲノムDNAのままか<b>一部の遺伝子発現のみ</b>のため、<b>免疫により排除されない</b>→生涯潜伏し続ける','ストレス・疲労・紫外線・免疫抑制剤で免疫が低下すると再活性化し、<b>回帰発症</b>（内因性感染）を起こす','一部（<b>EBV・KSHV</b>）はがん化に関与する'],
+ e:'初感染＝外因性感染、回帰発症＝内因性感染、という対比も押さえる。'},
+{p:0,s:'§12 科レベルの共通点',t:'recall',q:'パラミクソウイルス科・レトロウイルス科・ピコルナウイルス科の共通点をそれぞれ述べよ。',
+ a:['<b>パラミクソ科</b>：一本鎖<b>マイナス鎖</b>RNA／エンベロープあり／エンベロープ蛋白として <b>F蛋白</b> と <b>H（またはHN）蛋白</b> をもつ','<b>レトロ科</b>：エンベロープをもつ<b>RNA</b>ウイルス／<b>逆転写酵素</b>により ゲノムRNA→二本鎖DNA→RNA→タンパク の順で複製／すべての脊椎動物に存在し、がんウイルスとして古くから研究','<b>ピコルナ科</b>：<b>プラス鎖</b>一本鎖RNA／<b>ノンエンベロープ</b>／<b>IRES</b>（internal ribosomal entry site）をもち<b>キャップ非依存性</b>に翻訳される'],
+ e:'科の共通点を先に押さえると、各論のウイルスが自動的に埋まる。パラミクソのF蛋白（融合）とH/HN（吸着）はセットで。'},
+
+/* ---------------- 第2部 ---------------- */
+// §13 空気感染
+{p:1,s:'§13 空気感染',t:'pick',q:'空気感染（飛沫核感染）するのはどれか（すべて選べ）',
+ ok:['麻疹ウイルス','水痘・帯状疱疹ウイルス','天然痘ウイルス'],
+ ng:['風疹ウイルス','ムンプスウイルス','インフルエンザウイルス','RSウイルス','ノロウイルス','デングウイルス'],
+ e:'「<b>ま（麻疹）・す（水痘）・て（天然痘）</b>」。5µm以下の飛沫核として長時間浮遊し、2m以上離れていても吸入感染する。'},
+{p:1,s:'§13 空気感染',t:'ox',q:'麻疹疑いの患者が来院したため、他の患者への感染を防ぐ目的で待合室に衝立を立てて診察を待たせた。',a:false,
+ e:'×。空気感染するため衝立では不十分。<b>陰圧個室／空調の異なる別個室へ直ちに誘導</b>し、<b>N95</b>を着用する。'},
+{p:1,s:'§13 空気感染',t:'ox',q:'インフルエンザ・風疹・ムンプスは空気感染する。',a:false,
+ e:'×。いずれも<b>飛沫感染</b>。衝立や2m以上の距離で遮断可能。'},
+
+// §14 胎内感染
+{p:1,s:'§14 胎内感染（TORCH）',t:'pick',q:'経胎盤の胎内感染（垂直感染）を起こすのはどれか（すべて選べ）',
+ ok:['風疹ウイルス','サイトメガロウイルス','ヒトパルボウイルスB19','B型肝炎ウイルス','HIV','HTLV-1','ジカウイルス','水痘・帯状疱疹ウイルス'],
+ ng:['ノロウイルス','ロタウイルス','A型肝炎ウイルス','ライノウイルス','アデノウイルス','日本脳炎ウイルス'],
+ e:'※HSVは要注意。新生児ヘルペスの主経路は経胎盤ではなく<b>産道（経膣逆行性・周産期感染）</b>。'},
+{p:1,s:'§14 胎内感染（TORCH）',t:'recall',q:'先天性風疹症候群（CRS）の3主徴は？　また発症リスクとなる時期は？',
+ a:['<b>白内障</b>','<b>内耳性難聴</b>','<b>先天性心奇形</b>','<b>妊娠20週まで</b>の初感染'],
+ e:'CRS 3主徴は定番。時期（20週まで）もセットで問われる。'},
+{p:1,s:'§14 胎内感染（TORCH）',t:'ox',q:'新生児ヘルペス感染症の主たる感染経路は、胎盤を経由した胎内感染である。',a:false,
+ e:'×。<b>分娩時に産道から直接暴露される経膣逆行性感染（周産期感染）</b>が主経路。'},
+{p:1,s:'§14 胎内感染（TORCH）',t:'ox',q:'先天性サイトメガロウイルス感染症とは、親の生殖細胞の染色体に組み込まれたCMVゲノムが遺伝することを指す。',a:false,
+ e:'×。<b>母子垂直感染（経胎盤感染）</b>による感染症であり、遺伝病ではない。'},
+{p:1,s:'§14 胎内感染（TORCH）',t:'recall',q:'記述：ヒトパルボウイルスB19の胎内感染が胎児水腫を起こす機序。',
+ a:['受容体である<b>P抗原</b>を介して','胎児の<b>赤芽球前駆細胞（造血系細胞）</b>に特異的に感染・増殖して破壊','極めて重篤な<b>溶血性貧血（貧血発作）</b>が起こる','全身の低酸素と<b>心不全</b>の結果、<b>胎児水腫</b>に至る'],
+ e:'「P抗原 → 赤芽球前駆細胞 → 貧血 → 心不全 → 胎児水腫」の因果を一本の線で書く。'},
+{p:1,s:'§14 胎内感染（TORCH）',t:'recall',q:'CMVの胎内感染で胎児に生じる主な障害を挙げよ。',
+ a:['<b>小頭症</b>','<b>肝脾腫</b>','<b>黄疸</b>','<b>脳内石灰化</b>','<b>難聴</b>'],
+ e:'妊婦の<b>初感染</b>で最も胎児障害のリスクが高い。だからこそAvidity indexでの鑑別が要る（§25）。'},
+
+// §15 STD
+{p:1,s:'§15 性感染症',t:'pick',q:'性感染症（STD）の原因となる主要ウイルスはどれか（すべて選べ）',
+ ok:['ヒトパピローマウイルス','HIV','単純ヘルペスウイルス2型','B型肝炎ウイルス','A型肝炎ウイルス'],
+ ng:['ロタウイルス','麻疹ウイルス','インフルエンザウイルス','日本脳炎ウイルス','ノロウイルス','ライノウイルス'],
+ e:'HAVは本来は汚染水・食品の経口感染症だが、近年<b>MSM間の直接接触による性感染症</b>としての側面が重要視される。'},
+{p:1,s:'§15 性感染症',t:'recall',q:'HPVの型と疾患の対応は？',
+ a:['<b>高リスク型 16型・18型</b> → 子宮頸がん・咽頭（中咽頭）がん','<b>低リスク型 6型・11型</b> → 尖圭コンジローマ'],
+ e:'16/18 と 6/11 の入れ替えが最頻出のひっかけ。'},
+{p:1,s:'§15 性感染症',t:'ox',q:'単純ヘルペスウイルス2型は三叉神経節に潜伏感染する。',a:false,
+ e:'×。<b>HSV-2は仙髄（仙骨）神経節</b>、<b>HSV-1が三叉神経節</b>。'},
+{p:1,s:'§15 性感染症',t:'ox',q:'尖圭コンジローマはヒトパピローマウイルス16型・18型により引き起こされる。',a:false,
+ e:'×。16・18型は<b>子宮頸がん</b>。尖圭コンジローマは<b>6型・11型</b>。'},
+
+// §16 アルボ
+{p:1,s:'§16 アルボウイルス',t:'pick',q:'蚊（ヤブカ：ヒトスジシマカ・ネッタイシマカ）が媒介するのはどれか（すべて選べ）',
+ ok:['デングウイルス','ジカウイルス','黄熱ウイルス','チクングニアウイルス','ウエストナイルウイルス'],
+ ng:['日本脳炎ウイルス','SFTSウイルス','クリミア・コンゴ出血熱ウイルス','ラッサウイルス','狂犬病ウイルス'],
+ e:'日本脳炎は<b>コガタアカイエカ</b>、SFTS・クリミア・コンゴは<b>マダニ</b>。媒介節足動物の入れ替えに注意。'},
+{p:1,s:'§16 アルボウイルス',t:'pick',q:'マダニが媒介するのはどれか（すべて選べ）',
+ ok:['SFTSウイルス（ダビエバンダウイルス）','クリミア・コンゴ出血熱ウイルス'],
+ ng:['デングウイルス','日本脳炎ウイルス','ジカウイルス','黄熱ウイルス','チクングニアウイルス'],
+ e:'いずれも<b>ブニヤウイルス目・3分節</b>。'},
+{p:1,s:'§16 アルボウイルス',t:'recall',q:'アルボウイルスの共通点を、ウイルス側と感染症側に分けて述べよ。',
+ a:['【ウイルス側】<b>節足動物によって媒介</b>される（ダニ・カ・ヌカカ・サシチョウバエなど）','<b>経卵巣感染</b>して節足動物の世代を継代する','<b>人獣共通感染症</b>を起こす','すべて<b>RNAウイルス</b>である','遺伝子多様性が高く、<b>同じウイルスでも交叉免疫が生じないことが多い</b>（デングの型間で交差免疫が成立しないのが一例）','【感染症側】感染しても<b>ほとんど無症候性</b>だが一部で重症化する','臨床症状は<b>脳炎・出血熱・関節痛／皮疹</b>が重要','診断は<b>特異的ペア血清の有意な上昇</b>が基本'],
+ e:'「交叉免疫が生じにくい」がデング出血熱のADE（§63）に、「ペア血清」が§26に直結する。'},
+{p:1,s:'§16 アルボウイルス',t:'ox',q:'日本脳炎の患者が入院したため、直ちに隔離病室に隔離した。',a:false,
+ e:'×。アルボウイルスは<b>ヒト-ヒト間の飛沫・接触・空気感染を一切起こさない</b>ため、隔離は不要。'},
+{p:1,s:'§16 アルボウイルス',t:'ox',q:'チクングニアウイルスはフラビウイルス科に属する。',a:false,
+ e:'×。<b>トガウイルス科</b>。逆に<b>ジカはフラビウイルス科</b>。この2つの入れ替えが頻出。'},
+{p:1,s:'§16 アルボウイルス',t:'ox',q:'ジカウイルスはトガウイルス科に属する。',a:false,e:'×。<b>フラビウイルス科</b>。'},
+
+// §17 ズーノーシス
+{p:1,s:'§17 人畜共通感染症',t:'recall',q:'次の自然宿主を答えよ：狂犬病／HEV／インフルエンザA／ニパ／SARS-CoV／MERS-CoV／ラッサ',
+ a:['狂犬病 … <b>野生イヌ・ネコ・コウモリ</b>','E型肝炎 … <b>ブタ・シカ・イノシシ</b>','インフルエンザA … <b>野生水禽</b>','ニパ … <b>オオコウモリ（フルーツバット）</b>／媒介動物は<b>ブタ</b>','SARS-CoV … <b>キクガシラコウモリ</b>','MERS-CoV … <b>ヒトコブラクダ</b>','ラッサ … <b>マストミス（野ネズミ）</b>'],
+ e:'宿主動物の入れ替えは客観式の定番。コウモリ系（狂犬病／ニパ／SARS）を混同しないこと。'},
+{p:1,s:'§17 人畜共通感染症',t:'ox',q:'狂犬病ウイルスはウイルス血症を起こす。',a:false,
+ e:'×。咬傷部から<b>末梢神経を逆行性に移動</b>するため<b>ウイルス血症を起こさない</b>。発症時致死率100%。'},
+{p:1,s:'§17 人畜共通感染症',t:'ox',q:'E型肝炎ウイルスのうち、人畜共通感染症を引き起こす遺伝子型は1型・2型である。',a:false,
+ e:'×。<b>1型・2型はヒトのみ</b>。人畜共通に関与するのは<b>3型・4型</b>（生肉・レバー食による経口感染）。'},
+{p:1,s:'§17 人畜共通感染症',t:'ox',q:'A型急性肝炎は人畜共通感染症である。',a:false,e:'×。人畜共通感染症は<b>E型</b>。'},
+{p:1,s:'§17 人畜共通感染症',t:'recall',q:'なぜブタは新型インフルエンザ出現の「温床」になるのか？',
+ a:['ブタの気道上皮には<b>ヒト型とトリ型の双方の受容体が存在する</b>','そのためヒト株とトリ株が<b>同時感染</b>しやすく、体内で<b>遺伝子再集合（リアソートメント）</b>が極めて生じやすい'],
+ e:'「mixing vessel」。§3の分節ゲノムと必ずリンクさせて答える。'},
+{p:1,s:'§17 人畜共通感染症',t:'ox',q:'E型肝炎は妊娠後期に感染すると約20%が劇症化して死亡する。',a:true,e:'〇。妊婦後期のHEV劇症化は頻出の各論。'},
+
+// §18 水平伝播の5経路
+{p:1,s:'§18 水平伝播の5経路',t:'recall',q:'水平伝播の5つの感染経路を、代表的なウイルスとともに挙げよ。',
+ a:['<b>空気感染</b>（飛沫核＝径5µm<u>以下</u>／長時間漂い発生源から離れた者にも吸引される）… <b>麻疹・水痘</b>','<b>飛沫感染</b>（飛沫＝径5µm<u>以上</u>／発生源の周囲にのみ飛散）… インフルエンザ・風疹・流行性耳下腺炎・アデノ・RS・<b>麻疹・水痘</b>','<b>接触感染</b>… ロタ・ヘルペス・流行性耳下腺炎・HIV・HBV・パピローマ・<b>麻疹・水痘</b>','<b>経口感染</b>… ノロ・ロタ・A型肝炎・E型肝炎','<b>血液感染</b>（注射や傷口への接触）… <b>HIV・HBV・HCV</b>'],
+ e:'<b>麻疹と水痘は空気・飛沫・接触の3つすべてを起こす</b>のがポイント。「空気感染するのは麻疹・水痘だけ」＝正しいが、「麻疹は飛沫感染しない」＝誤り。'},
+{p:1,s:'§18 水平伝播の5経路',t:'recall',q:'水平伝播と垂直伝播の違いは？　水平伝播はさらにどう分かれるか。',
+ a:['<b>水平伝播</b>：感染源から周辺の不特定多数へ<b>横に</b>広がる伝播','　└ <b>直接伝播</b>（宿主から直接／飛沫など）と <b>間接伝播</b>（汚染物や媒介昆虫を介する）に分かれる','<b>垂直伝播</b>：母から児へ<b>縦に</b>伝わる（経胎盤・産道・母乳＝§20）'],
+ e:'アルボウイルスは「媒介昆虫を介する間接伝播」に当たる。'},
+{p:1,s:'§18 水平伝播の5経路',t:'ox',q:'ノロウイルスは狭い空間で空気感染することがあるが、これは麻疹のような飛沫核感染である。',a:false,
+ e:'×。ノロの「空気感染」は<b>埃と共に飛散する塵埃感染</b>であり、結核・麻疹・肺ペストのような<b>広範な飛沫核感染ではない</b>。だから「飛沫核感染するのはどれか」ではノロは選ばない。'},
+{p:1,s:'§18 水平伝播の5経路',t:'ox',q:'麻疹ウイルスは空気感染のみを起こし、飛沫感染や接触感染は起こさない。',a:false,
+ e:'×。麻疹は<b>空気・飛沫・接触の3経路すべて</b>で伝播する（伝播力はウイルス中トップレベル）。水痘も同様。'},
+
+// §19 血液媒介・針刺し事故
+{p:1,s:'§19 血液媒介と針刺し事故',t:'pick',q:'針刺し事故で感染しうる血液媒介ウイルスはどれか（すべて選べ）',
+ ok:['B型肝炎ウイルス','C型肝炎ウイルス','HIV','HTLV-1'],
+ ng:['ヒトパピローマウイルス','ノロウイルス','麻疹ウイルス','ライノウイルス','ロタウイルス'],
+ e:'HPVは上皮基底細胞で局所増殖するのみでウイルス血症を起こさない（§58）ため、針刺しでの感染は<b>ほぼゼロ</b>。'},
+{p:1,s:'§19 血液媒介と針刺し事故',t:'recall',q:'針刺し事故後の感染確率を、ウイルスごとに答えよ。',
+ a:['<b>HBV</b> … <b>HBe抗原陽性で約30%</b>、HBe抗原陰性でも1〜6%','<b>HCV</b> … 約<b>1.8%</b>','<b>HIV</b> … 約<b>0.3%</b>','<b>HPV</b> … ほぼゼロ','→ 序列は <b>HBV ≫ HCV > HIV</b>'],
+ e:'「HIVが一番怖い」という直感を逆手に取るひっかけ。<b>血液媒介で最も感染しやすいのはHBV</b>。'},
+{p:1,s:'§19 血液媒介と針刺し事故',t:'ox',q:'針刺し事故で最も感染する可能性が高いのはヒト免疫不全ウイルス（HIV）である。',a:false,
+ e:'×。<b>B型肝炎ウイルス</b>（HBe抗原陽性なら約30%）。HIVは約0.3%にすぎない。'},
+
+// §20 母子感染の3経路
+{p:1,s:'§20 母子感染の3経路',t:'recall',q:'母子感染の3つの経路と、代表的なウイルスを挙げよ。',
+ a:['<b>経胎盤（胎内）感染</b> … 風疹、CMV、パルボB19、ジカ、VZV','<b>産道感染（周産期）</b> … <b>HSV</b>、HBV、HIV','<b>母乳感染</b> … <b>HTLV-1</b>'],
+ e:'§14は経胎盤が中心。HSV＝産道、HTLV-1＝母乳、という「経胎盤ではない」2つを取り違えないこと。'},
+{p:1,s:'§20 母子感染の3経路',t:'recall',q:'新生児ヘルペスの感染経路を、割合とともに答えよ。',
+ a:['<b>周産期感染（産道）… 85%</b>','出生後感染（活動性HSV感染者とのキスなど）… 10%','子宮内感染 … <b>5%</b>（出生時に既に症状／3徴＝皮膚症状・眼障害・中枢神経系症状）'],
+ e:'圧倒的に産道感染。HSV未感染の母親から生まれた新生児では非常に重症になりうる。'},
+{p:1,s:'§20 母子感染の3経路',t:'recall',q:'記述：先天性CMV感染症は母体の再感染・再活性化なら症状が軽いのに、新生児ヘルペスは再感染・再活性化でも重篤なのはなぜか。',
+ a:['<b>先天性CMV</b>：ウイルスが<b>血液中を移動して経胎盤感染</b>するため、母体の<b>免疫機構が作用しやすい</b>','<b>新生児ヘルペス</b>：ウイルスが<b>外性器から膣を通って感染</b>するため、<b>免疫機構が作用しにくい</b>'],
+ e:'「経胎盤か産道か」という<b>感染経路の違い</b>が、母体免疫が届くかどうかを決めている。記述で頻出。'},
+{p:1,s:'§20 母子感染の3経路',t:'ox',q:'新生児・乳幼児のCMV感染が主に不顕性・軽症に経過するのは、母体からの移行抗体の効果である。',a:true,
+ e:'〇。ただし移行抗体を十分に受けていない<b>早産児・低出生体重児</b>では感染症へ発展しやすい。'},
+{p:1,s:'§20 母子感染の3経路',t:'recall',q:'先天性風疹症候群の診断で、生後1か月のIgG抗体価の単回測定が無意味なのはなぜか。何が有用か。',
+ a:['生後1か月では<b>母体からの移行抗体</b>が存在するため、IgGが陽性でも児自身の感染を示さない','有用なのは <b>IgM抗体陽性</b>、または <b>IgGの持続高値</b>、あるいは<b>児由来検体からの風疹ウイルス遺伝子検出</b>'],
+ e:'移行抗体は「診断の邪魔」にも「新生児の防御」にもなる（上のCMVと対で覚える）。'},
+
+/* ---------------- 第3部 ---------------- */
+// §21 中和抗体
+{p:2,s:'§21 中和抗体 vs 保因証明',t:'pick',q:'「中和抗体」として機能し、再感染防御やワクチン効果判定に使えるのはどれか（すべて選べ）',
+ ok:['抗HBs抗体','抗HAV-IgG抗体','抗麻疹抗体'],
+ ng:['抗HCV抗体','抗HIV抗体'],
+ e:'抗HBs抗体の出現＝HBV排除・治癒に向かうサイン。一方<b>抗HCV抗体・抗HIV抗体は中和能をもたない</b>。'},
+{p:2,s:'§21 中和抗体 vs 保因証明',t:'ox',q:'C型肝炎ウイルス抗体が陽性なので、中和抗体をもっていると判断した。',a:false,
+ e:'×。HCV抗体（コア, NS3, NS4, NS5）は<b>すべて中和抗体ではない</b>。陽性は<b>現在の持続感染、または過去の既感染</b>を示すにすぎない。'},
+{p:2,s:'§21 中和抗体 vs 保因証明',t:'ox',q:'持続感染が成立している際に検出される抗体は、一般的には中和抗体ではない。',a:true,
+ e:'〇。中和抗体があれば持続感染は成立しない、という論理。HCV・HIVが典型。'},
+
+// §22 アスピリン
+{p:2,s:'§22 アスピリン禁忌',t:'pick',q:'小児でアスピリン投与がライ症候群を誘発するため原則禁忌となるのはどれか（すべて選べ）',
+ ok:['インフルエンザウイルス','水痘・帯状疱疹ウイルス'],
+ ng:['麻疹ウイルス','風疹ウイルス','ムンプスウイルス','RSウイルス','アデノウイルス'],
+ e:'この<b>2つだけ</b>。15歳未満でサリチル酸系を投与すると、ミトコンドリア機能障害による<b>急性脳症＋脂肪肝（ライ症候群）</b>を誘発。'},
+{p:2,s:'§22 アスピリン禁忌',t:'ox',q:'インフルエンザを発症した10歳男児の発熱に対して、解熱のためにアスピリンを処方した。',a:false,
+ e:'×。<b>原則禁忌</b>。<b>アセトアミノフェン</b>等を使用する。'},
+
+// §23 口腔内病変
+{p:2,s:'§23 口腔内粘膜病変',t:'recall',q:'次の口腔内病変の原因ウイルスと、その特徴的な所見を答えよ。',
+ a:['<b>コプリック斑</b>（臼歯対面の頬粘膜の白い砂粒状斑）… <b>麻疹ウイルス</b>／カタル期に出現','<b>ヘルパンギーナ</b>（軟口蓋・咽頭の有痛性小水疱・潰瘍）… <b>コクサッキーウイルスA群</b>','<b>歯肉口内炎</b>（口腔粘膜・歯肉全体の有痛性小水疱・びらん）… <b>HSV-1の初感染</b>'],
+ e:'部位（頬粘膜／軟口蓋・咽頭／歯肉全体）とセットで覚えると鑑別できる。'},
+{p:2,s:'§23 口腔内粘膜病変',t:'ox',q:'口腔内にコプリック斑を認めたため、風疹と診断した。',a:false,e:'×。コプリック斑は<b>麻疹の絶対的特徴</b>。'},
+{p:2,s:'§23 口腔内粘膜病変',t:'ox',q:'口腔内のコプリック斑は、全身の発疹が消退した後に認める。',a:false,
+ e:'×。<b>発疹が出現する前（カタル期）</b>に出現し、発疹期には急速に消失する。'},
+
+// §24 二峰性発熱
+{p:2,s:'§24 二峰性発熱',t:'pick',q:'二峰性発熱の経過をとるのはどれか（すべて選べ）',
+ ok:['麻疹ウイルス'],
+ ng:['風疹ウイルス','ムンプスウイルス','水痘・帯状疱疹ウイルス','突発性発疹（HHV-6）','インフルエンザウイルス'],
+ e:'カタル期に第1峰 → 一時解熱したように見える → 発疹出現と同時にさらに高い第2峰。'},
+{p:2,s:'§24 二峰性発熱',t:'ox',q:'麻疹では解熱とともに皮疹は消失する。',a:false,
+ e:'×。解熱後もしばらく皮疹は<b>色素沈着</b>として残り、<b>落屑</b>を伴う。'},
+
+// §25 Avidity
+{p:2,s:'§25 Avidity index',t:'pick',q:'Avidity index が初感染と再活性化の鑑別に必須なのはどれか（すべて選べ）',
+ ok:['サイトメガロウイルス','単純ヘルペスウイルス'],
+ ng:['ノロウイルス','ロタウイルス','インフルエンザウイルス','C型肝炎ウイルス','ポリオウイルス'],
+ e:'IgGの抗原結合力（Avidity）は<b>初感染直後は低く、時間経過（成熟）とともに上昇</b>する性質を利用する。'},
+{p:2,s:'§25 Avidity index',t:'ox',q:'サイトメガロウイルスの初感染と再活性化の鑑別は、Avidity index の測定によって可能である。',a:true,
+ e:'〇。<b>低Avidity＝初感染</b>（胎児感染リスク大）、<b>高Avidity＝再活性化・既往感染</b>（リスク比較的低）。'},
+{p:2,s:'§25 Avidity index',t:'ox',q:'妊婦の血中からCMV-IgG抗体が検出されたため、直ちに胎児に重篤な先天異常が生じると判断した。',a:false,
+ e:'×。<b>Avidity index を測定して初感染か再活性化・既感染かを鑑別</b>しなければ断定できない。再活性化・既感染なら胎児への深刻な影響は極めて低い。'},
+
+// §26 ペア血清
+{p:2,s:'§26 ペア血清',t:'recall',q:'記述：ペア血清による確定診断の原理を説明せよ。',
+ a:['<b>急性期血清</b>（発症数日以内）と<b>回復期血清</b>（約2〜4週後・症状消失後）の2点を採取','<b>同一のアッセイ</b>（HI抗体価測定など）で<b>同時に</b>測定','特異的抗体価が<b>4倍以上に上昇</b>していれば有意と判定','そのウイルスによる<b>直近の急性感染</b>を臨床的に証明する'],
+ e:'「4倍以上」「2点同時測定」が得点キーワード。対象は日本脳炎・デング・麻疹・風疹・インフルエンザなど急性／初感染ウイルス一般。'},
+{p:2,s:'§26 ペア血清',t:'ox',q:'SFTSで発症から3日目に急速に死亡した患者に対し、確定診断にはペア血清によるIgG抗体測定が第一選択である。',a:false,
+ e:'×。急性経過で死亡すると<b>回復期血清が採取できない</b>ためペア血清は使えない。<b>PCRによるゲノム検出</b>、急性期<b>IgM抗体</b>、直接分離が必要。'},
+
+// §27 分離不可
+{p:2,s:'§27 ウイルス分離が困難',t:'pick',q:'病変からのウイルス分離が不可能（困難）なのはどれか（すべて選べ）',
+ ok:['ヒトパルボウイルスB19','ノロウイルス'],
+ ng:['手足口病（コクサッキー）','口唇ヘルペス（HSV-1）','帯状疱疹（VZV）','麻疹ウイルス','アデノウイルス'],
+ e:'理由が2つで異なる点に注意（下の解説参照）。'},
+{p:2,s:'§27 ウイルス分離が困難',t:'recall',q:'パルボB19とノロで、ウイルス分離が困難な理由はそれぞれ何か？',
+ a:['<b>パルボB19</b>：発疹期（両頬のリンゴ様発疹）には既に<b>抗体産生が確立</b>しており、<b>ウイルス血症・病変部からの排出は既に終了</b>しているため','<b>ノロ</b>：長年<b>培養細胞での増殖・株維持が確立されていなかった</b>ため、糞便からの分離培養が極めて困難'],
+ e:'「宿主側の免疫のタイミング」と「培養系の技術的問題」という別々の理由。混同しない。'},
+{p:2,s:'§27 ウイルス分離が困難',t:'ox',q:'伝染性紅斑（リンゴ病）の患者の両頬の発疹部から、原因ウイルスを容易に培養・分離することができる。',a:false,
+ e:'×。<b>発疹出現期にはウイルス血症・排出がすでに終了</b>しているため分離できない。'},
+
+// §28 LCMV
+{p:2,s:'§28 CPEなし・免疫寛容',t:'pick',q:'CPE（細胞変性効果）を示さず、胎生期感染で免疫寛容を成立させるのはどれか（すべて選べ）',
+ ok:['LCMV（リンパ球性脈絡髄膜炎ウイルス）'],
+ ng:['麻疹ウイルス','ポリオウイルス','単純ヘルペスウイルス','アデノウイルス','インフルエンザウイルス'],
+ e:'アレナウイルス科・自然宿主はマウス。'},
+{p:2,s:'§28 CPEなし・免疫寛容',t:'recall',q:'記述：LCMV感染マウスから生まれた仔マウスが、発症しないまま生涯ウイルスを排出し続ける理由。',
+ a:['<b>免疫寛容（Immunological tolerance）が成立するため</b>','胎児期・新生児期の垂直感染では、免疫系がウイルスを<b>「自己の成分」と誤認</b>し、キラーT細胞が一切攻撃しなくなる','LCMV自体は<b>非細胞破壊型（CPEを示さない）</b>ため、組織破壊も起こらず持続感染（保因状態）となる'],
+ e:'成獣が感染すると、逆に<b>CTLが感染細胞を激しく攻撃するせいで</b>致死的な無菌性髄膜炎を発症する。この対比が問われる。'},
+
+// §29 ADE（抗体依存性感染増強）
+{p:2,s:'§29 ADE（抗体依存性感染増強）',t:'recall',q:'記述：ADE（抗体依存性感染増強）とは何か。機序も述べよ。',
+ a:['体を守るはずの<b>抗体が、免疫細胞などへのウイルスの感染をかえって促進</b>させ、感染した免疫細胞が暴走して症状を悪化させてしまう現象','機序：<b>ワクチン接種</b>または<b>2度目のウイルス感染</b>で生じた抗体の<b>Fc領域</b>が、細胞上の<b>Fc受容体</b>に結合し、ウイルスを積極的に取り込ませる','<b>マクロファージに感染するウイルス</b>で起こる。ウイルスとマクロファージを近づけ、感染したマクロファージが<b>全身にウイルスを広げる</b>'],
+ e:'働くのは<b>中和抗体“以外”の抗体</b>。§21（非中和抗体）と地続きで、ADCC（Fc領域＋NK細胞）と機序が似て結果が真逆なのが要点。'},
+{p:2,s:'§29 ADE（抗体依存性感染増強）',t:'pick',q:'ADEが問題となったウイルスはどれか（すべて選べ）',
+ ok:['デングウイルス','RSウイルス'],
+ ng:['麻疹ウイルス','ポリオウイルス','A型肝炎ウイルス','ロタウイルス','B型肝炎ウイルス'],
+ e:'いずれも<b>不活化ワクチンの問題点</b>として講義で挙げられる2例。'},
+{p:2,s:'§29 ADE（抗体依存性感染増強）',t:'recall',q:'ADEが実際に問題となった2つの事例を述べよ。',
+ a:['<b>デングウイルス</b>：4つの血清型があり、<b>再感染時に以前と異なる型に感染するとADEが生じて重症化</b>する。<b>フィリピン</b>ではデングワクチン接種後にADEが原因とみられる<b>死亡事故</b>が発生し、ワクチン接種が中止された','<b>RSウイルス</b>：以前開発された<b>（不活化）RSウイルスワクチン</b>でADEが起こったと考えられる事象が報告された'],
+ e:'「ワクチンを打ったのに悪化した」という文脈で問われる。デング出血熱（§63）の分子的な説明でもある。'},
+{p:2,s:'§29 ADE（抗体依存性感染増強）',t:'ox',q:'ADEは、中和抗体が過剰に産生されることによって起こる。',a:false,
+ e:'×。<b>中和抗体以外の抗体</b>が、<b>Fc領域とFc受容体</b>を介してウイルスの細胞内取り込みを促進することで起こる。'},
+{p:2,s:'§29 ADE（抗体依存性感染増強）',t:'ox',q:'デングワクチンは、デング未感染者に接種すると、実際に感染した際にかえって重症化しうる。',a:true,
+ e:'〇。そのためデングワクチンは<b>既感染者にのみ有効</b>という制約がある。ADEそのものが原因。'},
+
+// §30 終生免疫
+{p:2,s:'§30 終生免疫の成立',t:'recall',q:'記述：1950年時点と現在を比べて、終生免疫（生涯免疫）が成立するウイルスは増えたか減ったか。理由とともに述べよ。',
+ a:['<b>減少している</b>','終生免疫が成立するには、そのウイルスの<b>市中での感染が頻繁に生じている</b>こと（自然感染による繰り返しのブースター）が必要である','しかし現在は<b>ワクチンの普及</b>により、そのような状況にあるウイルスが減少しているため'],
+ e:'一見ワクチンで免疫が増えそうだが逆、というひっかけ。ワクチンで流行が止まると<b>自然のブースターが失われる</b>。'},
+{p:2,s:'§30 終生免疫の成立',t:'ox',q:'ワクチンの普及により、終生免疫が成立するウイルスは1950年時点より増加した。',a:false,
+ e:'×。<b>減少</b>している。終生免疫の成立には市中での頻繁な感染（自然のブースター）が必要で、ワクチン普及でそれが失われたため。'},
+
+/* ---------------- 第4部 ---------------- */
+// §31 発がん
+{p:3,s:'§31 発がんウイルス',t:'pick',q:'発がん性をもつ（腫瘍ウイルスとされる）のはどれか（すべて選べ）',
+ ok:['ヒトパピローマウイルス','EBウイルス','HHV-8（KSHV）','B型肝炎ウイルス','C型肝炎ウイルス','HTLV-1'],
+ ng:['サイトメガロウイルス','単純ヘルペスウイルス1型','ロタウイルス','インフルエンザウイルス','A型肝炎ウイルス','水痘・帯状疱疹ウイルス'],
+ e:'HPV / EBV / KSHV / HBV / HCV / HTLV-1 の6つ。'},
+{p:3,s:'§31 発がんウイルス',t:'recall',q:'記述：HPVの発がん機序を、不活化されるタンパク質を含めて記述せよ。',
+ a:['<b>E6遺伝子産物がp53（がん抑制遺伝子）</b>と結合してこれを不活化・分解する','<b>E7遺伝子産物がpRb（がん抑制遺伝子）</b>と結合してこれを不活化する','結果、<b>アポトーシス誘導能</b>と<b>細胞周期のG1/S期制御</b>が破綻し、DNA合成系が活性化されて上皮細胞が不死化・がん化する'],
+ e:'<b>E6→p53、E7→pRb</b>。この2つの結合関係を両方書かないと部分点しか出ない。入れ替えひっかけも頻出。'},
+{p:3,s:'§31 発がんウイルス',t:'recall',q:'各腫瘍ウイルスと関連悪性腫瘍・発がん機序を答えよ。',
+ a:['<b>HPV(16,18)</b>：子宮頸がん・中咽頭がん・陰茎がん・肛門がん／E6→p53, E7→pRb','<b>EBV</b>：バーキットリンパ腫・上咽頭がん／B細胞を不死化し、<b>遺伝子転座</b>（Igのプロモーター下流に<b>c-myc</b>）でがん化が加速','<b>KSHV(HHV-8)</b>：カポジ肉腫／血管内皮増殖因子・抗アポトーシスシグナルを駆動し腫瘍血管新生を誘発','<b>HBV</b>：肝細胞がん／ウイルスDNAが宿主染色体に<b>Integration</b>し、ゲノム不安定化を誘導','<b>HCV</b>：肝細胞がん／<b>組み込みは一切なし</b>。慢性炎症→壊死→再生の反復による<b>間接的</b>発がん','<b>HTLV-1</b>：成人T細胞白血病/リンパ腫（ATL）／pX領域の<b>Tax・HBZ</b>がT細胞増殖シグナルを狂わせる'],
+ e:'HBV＝直接（組み込み）、HCV＝間接（慢性炎症）の対比が最重要。'},
+{p:3,s:'§31 発がんウイルス',t:'ox',q:'C型肝炎ウイルスのゲノムは宿主肝細胞の染色体に組み込まれることで発がんする。',a:false,
+ e:'×。RNAウイルスであり<b>宿主染色体に組み込まれることは一切ない</b>。発がんは<b>慢性炎症を介した間接的機序</b>。'},
+{p:3,s:'§31 発がんウイルス',t:'ox',q:'成人T細胞白血病（ATL）は、HTLV-1感染後、小児期に好発する。',a:false,
+ e:'×。感染後<b>20〜30年以上</b>の長い潜伏期を経て、<b>成人（高齢者）</b>に好発する。'},
+
+// §32 T/NK
+{p:3,s:'§32 T/NK細胞に感染',t:'pick',q:'T細胞やNK細胞に感染して致死的な慢性経過（がん化・白血病）をたどりうるのはどれか（すべて選べ）',
+ ok:['EBウイルス','HTLV-1'],
+ ng:['サイトメガロウイルス','HHV-6','単純ヘルペスウイルス1型','B型肝炎ウイルス','アデノウイルス'],
+ e:'EBVは通常B細胞だが、まれにT/NKに感染するとCAEBVとなる。HTLV-1の標的は<b>CD4陽性T細胞</b>。'},
+{p:3,s:'§32 T/NK細胞に感染',t:'recall',q:'記述：伝染性単核球症（IM）と慢性活動性EBV感染症（CAEBV）で、EBVの標的細胞はどう違うか。',
+ a:['<b>IM</b>：EBVは主に<b>B細胞（または上皮細胞）</b>に感染。健常成人では<b>一過性・自己制限的</b>に治癒する','<b>CAEBV</b>：例外的に<b>T細胞やNK細胞</b>にEBVが感染。これらが慢性的に異常増殖し、全身の臓器障害や白血病・悪性リンパ腫を引き起こす'],
+ e:'「B細胞なら自己制限的、T/NKなら致死的」という対比で覚える。'},
+
+// §33 補体
+{p:3,s:'§33 補体が効かない',t:'recall',q:'なぜ抗体＋補体はウイルス「感染細胞」を溶解できないのか。何が排除の主役か。',
+ a:['宿主の自己細胞表面には<b>補体制御因子（CD55, CD59など）</b>が恒常的に発現しており、自己組織が補体で誤って溶解されるのを防いでいる','そのため感染細胞に中和抗体が結合しても、<b>膜襲撃複合体（MAC）</b>による細胞溶解はほとんど起こらない','排除の主役は <b>ADCC（抗体依存性細胞傷害）</b> と <b>細胞障害性T細胞（CTL／キラーT細胞、MHC class I 経由）</b>'],
+ e:'「ウイルス粒子」ではなく「感染細胞」の話である点に注意。'},
+{p:3,s:'§33 補体が効かない',t:'ox',q:'抗体や補体は、ウイルス感染細胞に対して強い溶解作用を発揮する。',a:false,
+ e:'×。<b>補体制御因子</b>の存在により補体は感染細胞を直接溶解できない。<b>ADCC</b>やT細胞による排除が主。'},
+{p:3,s:'§33 補体が効かない',t:'recall',q:'記述：抗体依存性細胞傷害（ADCC）とは何か。',
+ a:['抗体が<b>感染細胞表面のウイルススパイク蛋白</b>に結合し','その<b>Fc領域</b>を目印（シグナル）として<b>NK細胞</b>が感染細胞を直接攻撃・破壊（<b>アポトーシス誘導</b>）する','抗体仲介型の免疫防御機構'],
+ e:'「Fc領域」「NK細胞」「アポトーシス」の3語が採点ポイント。'},
+
+// §34 Integration
+{p:3,s:'§34 宿主染色体への組み込み',t:'pick',q:'DNAが宿主染色体に組み込まれる（Integration）のはどれか（すべて選べ）',
+ ok:['HIV','HTLV-1','B型肝炎ウイルス','ヒトパピローマウイルス'],
+ ng:['C型肝炎ウイルス','インフルエンザウイルス','麻疹ウイルス','ポリオウイルス','単純ヘルペスウイルス','アデノウイルス'],
+ e:'レトロ（必須工程・<b>インテグラーゼ</b>）／HBV（一部が物理的に組み込まれる）／HPV（発がん過程で環状エピゾームが切れて組み込まれ、<b>E6・E7の発現がロック解除</b>される）。'},
+{p:3,s:'§34 宿主染色体への組み込み',t:'ox',q:'レトロウイルスは、逆転写されたDNAがインテグラーゼにより宿主ゲノムに組み込まれてプロウイルスとなる。',a:true,e:'〇。'},
+{p:3,s:'§34 宿主染色体への組み込み',t:'ox',q:'レトロウイルスベクターやレンチウイルスベクターによる遺伝子治療には、宿主染色体に組み込まれることでがん抑制遺伝子を破壊する「挿入変異」の発がんリスクが依然として存在する。',a:true,
+ e:'〇。だからこそ組み込まれないAAVベクター（§1）との対比が問われる。'},
+
+// §35 HCV
+{p:3,s:'§35 HCVの間接発がん',t:'recall',q:'記述：HCVはRNAウイルスで染色体に組み込まれないのに、なぜ高頻度に肝細胞がんを起こすのか。',
+ a:['ゲノムが<b>一本鎖プラス鎖RNA</b>で<b>逆転写酵素をコードしない</b>ため、DNA化して染色体に組み込まれることは<b>生物学的に100%あり得ない</b>','にもかかわらず、宿主免疫を逃れて肝細胞に<b>数十年にわたり持続感染（慢性肝炎）</b>する','<b>持続的な慢性炎症 → 肝細胞の壊死・破壊 → 再生</b>の永続的ループの中で、多段階的なゲノム修復エラー・遺伝子変異が蓄積する（<b>間接的がん化</b>）'],
+ e:'HBV（直接／Integration）との対比で書くと完璧。'},
+
+// §36 不顕性感染
+{p:3,s:'§36 不顕性感染',t:'pick',q:'不顕性感染が大部分を占める（感染してもほとんど症状が出ない）のはどれか（すべて選べ）',
+ ok:['エンテロウイルス属','サイトメガロウイルス','HHV-6','HHV-7','ロタウイルス（成人）'],
+ ng:['麻疹ウイルス','ライノウイルス','狂犬病ウイルス'],
+ e:'エンテロウイルス属は「発症は氷山の一角」。CMVは陽性率約80%だが健常者の初感染はほぼ無症候。'},
+{p:3,s:'§36 不顕性感染',t:'pick',q:'不顕性感染が極めて<u>少ない</u>（曝露されるとほぼ発症する）のはどれか（すべて選べ）',
+ ok:['麻疹ウイルス','ライノウイルス','狂犬病ウイルス'],
+ ng:['エンテロウイルスA71','コクサッキーウイルスA2','ポリオウイルスPV1','サイトメガロウイルス','ロタウイルス（成人）'],
+ e:'麻疹：感受性者の曝露で90%〜ほぼ100%が発症。狂犬病：侵入すれば100%発症・100%死亡。'},
+{p:3,s:'§36 不顕性感染',t:'ox',q:'ピコルナウイルス科の中で、ライノウイルスは他のエンテロウイルス属と同様に不顕性感染が多いのが特徴である。',a:false,
+ e:'×。<b>ライノウイルスは例外的に不顕性感染が極めて少なく</b>、ほとんどの感染者がかぜ症候群を発症する。'},
+
+// §37 排除不可能
+{p:3,s:'§37 完全排除が不可能',t:'pick',q:'体内から完全に排除することが不可能（潜伏・持続感染する）なのはどれか（すべて選べ）',
+ ok:['単純ヘルペスウイルス1型','水痘・帯状疱疹ウイルス','EBウイルス','サイトメガロウイルス','HHV-8','B型肝炎ウイルス','HIV','HTLV-1'],
+ ng:['C型肝炎ウイルス','A型肝炎ウイルス','麻疹ウイルス','ロタウイルス','インフルエンザウイルス','ポリオウイルス'],
+ e:'ヘルペス科<b>全8種</b>／HBV（<b>cccDNA</b>）／レトロ（<b>プロウイルス</b>）。HCVだけがDAAで根治できる（§38）。'},
+{p:3,s:'§37 完全排除が不可能',t:'recall',q:'記述：B型肝炎で核酸アナログ製剤を投与してもウイルスを完全排除できない理由。',
+ a:['核酸アナログ製剤は逆転写やDNA合成を阻害してウイルスの<b>「増殖」</b>は強力に抑え込む','しかし肝細胞の<b>核内にミニクロモソームとして安定して定着したスーパーコイル状の「cccDNA」</b>（covalently closed circular DNA）を<b>排除する効果はない</b>','そのため投与を中止すると容易に再増殖し、免疫抑制療法・化学療法時には<b>de novo B型肝炎</b>として劇症再活性化する'],
+ e:'<b>cccDNA＝ミニクロモソーム</b>という言い換えも書けるとよい。'},
+{p:3,s:'§37 完全排除が不可能',t:'ox',q:'単純ヘルペスウイルス潜伏感染時には、アシクロビルを高用量投与することで効率的に排除・完治させることができる。',a:false,
+ e:'×。アシクロビルは<b>チミジンキナーゼを介してウイルス複製</b>に作用するが、<b>潜伏感染ウイルスのゲノムは複製していない</b>ため全く効果がない。'},
+{p:3,s:'§37 完全排除が不可能',t:'recall',q:'ヘルペスウイルスの潜伏部位を答えよ（HSV-1／HSV-2／VZV／EBV）。',
+ a:['HSV-1 … <b>三叉神経節</b>','HSV-2 … <b>仙髄（仙骨）神経節</b>','VZV … 感覚神経節（後根神経節）','EBV … <b>B細胞</b>'],
+ e:'潜伏中はゲノムが<b>環状DNA（エピゾーム）</b>として核内で複製を停止したまま生涯維持される。'},
+
+// §38 根治可能
+{p:3,s:'§38 完治が可能な持続感染',t:'pick',q:'薬物治療によって体内から完全排除・完治が可能な持続感染ウイルスはどれか（すべて選べ）',
+ ok:['C型肝炎ウイルス'],
+ ng:['B型肝炎ウイルス','HIV','HTLV-1','単純ヘルペスウイルス','サイトメガロウイルス','EBウイルス'],
+ e:'DAA（NS3/4Aプロテアーゼ・NS5A・NS5Bポリメラーゼ阻害）のIFNフリー多剤併用で著効率<b>95〜100%</b>（SVR＝完治）。従来のPEG-IFN＋リバビリンは50%だった。'},
+{p:3,s:'§38 完治が可能な持続感染',t:'recall',q:'記述：B型肝炎とC型肝炎の治療到達目標（ゴール）の違いを、ウイルスの生物学的特徴を踏まえて説明せよ。',
+ a:['<b>B型</b>：核内に<b>cccDNA</b>を形成するため完全排除ができない。治療目的は<b>肝機能の維持と発がん抑制（臨床的治癒）</b>にとどまる','<b>C型</b>：RNAウイルスで<b>細胞質のみで複製</b>し、<b>染色体に組み込まれない</b>。この生物学的脆弱性を突いた<b>DAA多剤併用</b>により体内から完全排除でき、<b>完治（根治／SVR）</b>が可能'],
+ e:'「なぜ差が出るか」＝cccDNA vs 細胞質完結＋組み込みなし。ここを書かないと点にならない。'},
+
+// §39 血清型
+{p:3,s:'§39 血清型が多い',t:'pick',q:'血清型（亜型）が極めて多く、生涯に何度も再感染するのはどれか（すべて選べ）',
+ ok:['ライノウイルス','ヒトアデノウイルス','インフルエンザAウイルス'],
+ ng:['麻疹ウイルス','風疹ウイルス','ムンプスウイルス','水痘・帯状疱疹ウイルス','A型肝炎ウイルス'],
+ e:'ライノ＝100種以上の血清型／アデノ＝<b>A〜G群・1〜56型</b>／インフルA＝HA 1–18・NA 1–11。'},
+{p:3,s:'§39 血清型が多い',t:'recall',q:'アデノウイルスの型と疾患の対応は？',
+ a:['<b>3型</b> … プール熱（咽頭結膜熱）','<b>8型・19型</b> … 流行性角結膜炎','<b>40型・41型</b> … 腸炎'],
+ e:'呼吸器・結膜・腸管と、型ごとに標的が違うのがアデノの特徴。'},
+{p:3,s:'§39 血清型が多い',t:'recall',q:'記述：風邪に一生のうちに何度も罹患する理由を3つの観点から述べよ。',
+ a:['① <b>ウイルスの種類と血清型が極めて多岐にわたる</b>（ライノ・コロナ・アデノ・RSなどがあり、ライノだけでも100以上の型）','② <b>変異（点変異・再集合）の頻度が高く、常に抗原が変化し続ける</b>','③ <b>局所の獲得免疫（分泌型IgA等）の持続性が低く</b>、経時的に抗体価が低下して再感染する'],
+ e:'①型の多様性 ②抗原変異 ③局所免疫の短命さ。3点セットで。'},
+
+// §40 持続感染の3様式
+{p:3,s:'§40 持続感染の3様式',t:'recall',q:'ウイルス感染後の経過を分類せよ。持続性感染の3様式をそれぞれ説明すること。',
+ a:['<b>急性非持続性感染</b>：一過性の急性感染で、宿主免疫により短期間で排除される（ポリオ、インフルエンザ、HAV）','<b>①潜伏感染</b>：感染しているが<b>ウイルス粒子が産生されない</b>。ゲノムとして細胞内に潜み、ときに再活性化して粒子産生する。再活性化で再び症状が出ることを<b>回帰発症</b>という（HSV、VZV）','<b>②慢性感染</b>：感染細胞から<b>ウイルス粒子が産生され続ける</b>。ウイルスの直接障害より<b>免疫応答による組織障害が大きい</b>（HBV、HCV、EBV、CMV）','<b>③遅発性感染（スローウイルス感染症）</b>：長い潜伏期（数か月〜数年）の後に発症し、進行性に悪化してほとんど死亡。<b>病変は単一の臓器・組織系に限局</b>（SSPE、PML、AIDS、ATL）'],
+ e:'<b>粒子を作らない＝潜伏／作り続ける＝慢性</b>。この一点で切り分ける。'},
+{p:3,s:'§40 持続感染の3様式',t:'ox',q:'潜伏感染では、ウイルスが比較的緩慢に増殖を続けている。',a:false,
+ e:'×。<b>潜伏感染ではウイルス粒子は産生されない</b>。緩慢に増殖を続けるのは<b>慢性感染</b>（持続感染）のほう。記述で問われた実績あり。'},
+{p:3,s:'§40 持続感染の3様式',t:'pick',q:'遅発性（スロー）ウイルス感染症はどれか（すべて選べ）',
+ ok:['SSPE（亜急性硬化性全脳炎）','PML（進行性多巣性白質脳症）','AIDS','ATL'],
+ ng:['インフルエンザ','A型肝炎','ポリオ','ヘルパンギーナ','手足口病'],
+ e:'長い潜伏期→進行性に悪化→ほとんど死亡。ng側はいずれも<b>急性非持続性感染</b>。'},
+
+// §41 初感染と再活性化
+{p:3,s:'§41 初感染と再活性化',t:'recall',q:'記述：ヘルペスウイルス科の疾患が初感染と再活性化で症状が異なるのはなぜか。例を1つ挙げよ。',
+ a:['初感染後、宿主細胞（<b>神経節やリンパ球</b>）に<b>潜伏感染</b>し、免疫応答によりウイルス増殖が抑制される','再活性化時は<b>既存の免疫により全身性の感染は生じず</b>、<b>潜伏部位からの局所的な再増殖</b>にとどまるため症状が異なる','例）<b>VZV</b>：初感染＝全身性発疹の<b>水痘</b>／再活性化＝分節性の疼痛と皮疹を呈する<b>帯状疱疹</b>','例）<b>HSV-1</b>：初感染＝口腔粘膜の広範なびらん（歯肉口内炎）／再活性化＝同部位に限局した小水疱'],
+ e:'記述で複数年出題。「既存免疫があるから全身に広がらず局所にとどまる」が核心。'},
+{p:3,s:'§41 初感染と再活性化',t:'recall',q:'HSV感染症の3つの発症様式を答えよ。',
+ a:['<b>初感染初発型</b>：外部からのHSV初感染。局所症状が強く病変は広範囲に及ぶ','<b>非初感染初発型</b>：過去の感染では無症状。免疫低下などの誘因で再活性化し、臨床症状が初めて出現','<b>再発型</b>：潜伏感染していたHSVの再活性化による'],
+ e:'「初めて症状が出た＝初感染」とは限らない、という点が臨床的な落とし穴。'},
+{p:3,s:'§41 初感染と再活性化',t:'recall',q:'記述：HSVで主として1型が口唇ヘルペス、2型が性器ヘルペスの原因となるのはなぜか。',
+ a:['<b>潜伏感染部位が異なるため</b>','1型＝<b>三叉神経節</b>／2型＝<b>仙髄（仙骨）神経節</b>'],
+ e:'一文で足りる記述。ただし住み分けは厳密ではなく、口唇から性器に感染したHSV-1が性器ヘルペスを起こすこともある（再活性化による性器ヘルペスの殆どはHSV-2）。'},
+
+/* ---------------- 第5部 ---------------- */
+// §42 生ワクチン
+{p:4,s:'§42 弱毒生ワクチン',t:'pick',q:'弱毒生ワクチンで予防するのはどれか（すべて選べ）',
+ ok:['麻疹','風疹','MR（麻疹・風疹混合）','水痘','おたふくかぜ（ムンプス）','ロタウイルス','黄熱','インフルエンザ（フルミスト／経鼻）','ポリオ（OPV／経口）'],
+ ng:['日本脳炎','インフルエンザ（注射・不活化）','ポリオ（IPV／注射）','B型肝炎','A型肝炎','HPV','狂犬病'],
+ e:'※BCG（結核）も生ワクチンだが<b>細菌</b>ワクチン。※<b>インフルエンザとポリオは両方の形式がある</b>：インフルは注射＝不活化／<b>経鼻フルミスト＝弱毒生</b>（2024/25〜）、ポリオは<b>OPV（経口）＝弱毒生</b>／IPV（注射）＝不活化。<b>日本は2012年9月にOPVを廃止しIPVへ全面移行</b>したが、<b>世界ではOPVを使う国が多い</b>（§44）。'},
+{p:4,s:'§42 弱毒生ワクチン',t:'recall',q:'インフルエンザ弱毒生ワクチン「フルミスト」について、接種法・利点・制約を述べよ。',
+ a:['<b>2024/25シーズンから国内開始</b>（2024年秋に販売開始）の<b>経鼻</b>接種の弱毒生ワクチン','<b>利点①</b>：経鼻接種されたワクチン株が<b>局所で増殖</b>することで<b>粘膜免疫を誘導</b>できる。これは<b>不活化インフルエンザワクチンでは誘導できない</b>','<b>利点②</b>：注射針を使わないため刺激性が低い','<b>利点③</b>：不活化では13歳以下は原則2回接種だが、フルミストは<b>1回接種で完了</b>','<b>制約①</b>：臨床試験で<b>成人に有効性が示されなかった</b>ため、対象は<b>2〜18歳に限定</b>','<b>制約②</b>：<b>鼻汁が出ていると経鼻接種が困難</b>'],
+ e:'「インフルエンザ＝不活化のみ」は<b>もう誤り</b>。生ワクチンが体内で増殖する（§42）から粘膜免疫が誘導できる、という一般論の実例。'},
+{p:4,s:'§42 弱毒生ワクチン',t:'ox',q:'インフルエンザワクチンは不活化ワクチンのみであり、弱毒生ワクチンは存在しない。',a:false,
+ e:'×。<b>経鼻の弱毒生ワクチン「フルミスト」</b>が2024/25シーズンから国内で使用開始された。注射のものが不活化。'},
+{p:4,s:'§42 弱毒生ワクチン',t:'ox',q:'フルミストは成人にも有効性が示されており、全年齢が接種対象である。',a:false,
+ e:'×。臨床試験で<b>成人に有効性が示されなかった</b>ため、対象は<b>2〜18歳に限定</b>されている。'},
+{p:4,s:'§42 弱毒生ワクチン',t:'recall',q:'弱毒生ワクチンの免疫学的特徴を2点挙げよ。',
+ a:['体内で実際にウイルスが複製・増殖するため、細胞質内で分解されたウイルスタンパクが<b>MHC class I</b>を介して提示され、<b>不活化ワクチンでは絶対に誘導できないCTL（キラーT細胞）を強力にプライミングできる</b>','免疫原性が極めて高いため<b>アジュバントを必要としない</b>'],
+ e:'野生株の自然感染に極めて近い強固な獲得免疫が成立する。'},
+{p:4,s:'§42 弱毒生ワクチン',t:'recall',q:'弱毒生ワクチンの臨床上の重大な禁忌を2つ挙げよ。',
+ a:['<b>妊婦</b>への接種 … 胎内感染（垂直感染）のリスクがあり<b>絶対禁忌</b>','<b>極度の免疫不全者</b>（末梢血CD4陽性T細胞が著減したHIV/AIDS患者、骨髄移植・化学療法中など）… 弱毒株でも体内で制御不能に増殖し、致死的な全身性ワクチン感染症を起こすため<b>原則禁忌</b>'],
+ e:'「絶対禁忌（妊婦）」と「原則禁忌（免疫不全）」の言い回しの差にも注意。'},
+{p:4,s:'§42 弱毒生ワクチン',t:'ox',q:'生ワクチンは安全性が高いため、重度の免疫不全患者に対しても安全に接種可能である。',a:false,
+ e:'×。<b>禁忌</b>。弱毒株が制御不能に増殖し致死的な全身性ワクチン感染症を起こす。'},
+{p:4,s:'§42 弱毒生ワクチン',t:'ox',q:'日本脳炎ワクチンは弱毒生ワクチンである。',a:false,e:'×。<b>不活化ワクチン</b>。'},
+
+// §43 不活化
+{p:4,s:'§43 不活化ワクチン',t:'pick',q:'不活化ワクチンで予防するのはどれか（すべて選べ）',
+ ok:['インフルエンザ（注射・不活化）','日本脳炎','ポリオ（IPV／注射）','A型肝炎','B型肝炎','HPV','狂犬病'],
+ ng:['麻疹','風疹','水痘','ムンプス','ロタウイルス','黄熱','インフルエンザ（フルミスト／経鼻）','ポリオ（OPV／経口）'],
+ e:'HPVワクチンは<b>ウイルス様中空粒子（VLP）</b>を抗原とする。※Hib・肺炎球菌ワクチンも不活化だが<b>細菌</b>ワクチン。'},
+{p:4,s:'§43 不活化ワクチン',t:'recall',q:'インフルエンザ不活化ワクチンの形式と、その有効性の限界を述べよ。',
+ a:['国内の主流は<b>4価</b>：A型の<b>H3N2（香港型）</b>と<b>H1N1（2009年新型）</b>、B型の<b>Victoria系統</b>と<b>Yamagata系統</b>','形式は、粒子を分解して必要な分画のみ抽出した<b>スプリットワクチン</b>と、粒子をまるごと不活化した<b>全粒子ワクチン</b>に分かれる（現行のスプリットは安全性が極めて高い）','<b>共通する限界</b>：<b>感染と発病を完全には防御できない</b>が、<b>重症化と合併症の発生を予防できる</b>','高齢者ではインフルエンザによる<b>死亡を1/5</b>、<b>入院を1/3〜1/2</b>に減少させるため、ハイリスク群に推奨される'],
+ e:'「効かないから打たない」への反論がこの数字。目的は発症阻止ではなく<b>重症化予防</b>。'},
+{p:4,s:'§43 不活化ワクチン',t:'recall',q:'記述：不活化ワクチンの感染防御・ウイルス排除効果が弱毒生ワクチンに比べて低い理由を、免疫誘導機序の違いが明確になるように説明せよ。',
+ a:['<b>ウイルス排除には、感染細胞をアポトーシスさせて直接破壊できる細胞障害性T細胞（CTL／キラーT細胞）が必須である</b>','<b>弱毒生ワクチンは体内で増殖するためCTLをプライミングできるが、不活化ワクチンは体内で増殖しないためCTLを誘導できず、中和抗体（液性免疫）の誘導にとどまる</b>','（不活化は外来抗原として<b>MHC class II</b>経路の液性免疫が主体。この低さを補うため<b>アジュバント添加と複数回のブースター</b>が必要）'],
+ e:'採点は上の2つの生物学的根拠の対比。MHC class I（生） vs class II（不活化）まで書ければ万全。'},
+{p:4,s:'§43 不活化ワクチン',t:'recall',q:'不活化ワクチンの問題点を「抗体の作用の限界」という観点から2つ挙げよ。',
+ a:['<b>①一度細胞に入ったウイルスは抗体で攻撃できない</b>：細胞には<b>補体抑制因子（CD55, CD59）</b>があるため補体を利用した細胞融解ができない。どれだけ抗体を作らせても<b>細胞性免疫が働かないと効果が期待できない</b>（§33）','<b>②中和抗体以外の抗体が感染を広げる可能性がある</b>：<b>ADE</b>（デング、RSウイルスの例／§29）。抗体ができたことがかえってあだとなり病気を増悪させた事例が報告されている'],
+ e:'「抗体さえ作れば安全」ではない、というのが不活化ワクチンの限界。§33（補体）と§29（ADE）が両方ここに集約する。'},
+{p:4,s:'§43 不活化ワクチン',t:'recall',q:'従来型を補う新しいワクチンの工夫を挙げよ。',
+ a:['<b>mRNAワクチン</b>：化学合成できるため<b>変異に素早く対応</b>でき、従来の不活化で不利だった<b>細胞性免疫も誘導できる</b>','<b>ウイルスベクターワクチン</b>（§51のベクター技術の応用）','<b>経鼻ワクチン</b>：感染そのものを防ぐ<b>IgA</b>が分泌される','<b>RSウイルスワクチン＝母子免疫</b>：<b>妊婦に接種</b>し、<b>移行抗体および母乳</b>を通じて乳幼児のRSウイルス感染を防ぐ','<b>デングワクチンの問題点</b>：<b>既感染者にのみ有効</b>（未感染者に接種すると感染時に悪化＝ADE）'],
+ e:'mRNAワクチンの利点＝「変異への即応」と「細胞性免疫も誘導」の2点。母子免疫は移行抗体（§20）の応用。'},
+
+// §44 VAPP
+{p:4,s:'§44 VAPP',t:'pick',q:'ワクチン株が体内で強毒化（リバート）してワクチン関連麻痺が問題となったのはどれか（すべて選べ）',
+ ok:['ポリオ経口弱毒生ワクチン（OPV / Sabin I, II, III株）'],
+ ng:['不活化ポリオワクチン（IPV）','麻疹弱毒生ワクチン','水痘ワクチン','インフルエンザ不活化ワクチン','HPVワクチン'],
+ e:'IPVは強毒化リスクが<b>100%ゼロ</b>。現在の日本はIPV（皮下注射・4種混合等）に全面移行済み。'},
+{p:4,s:'§44 VAPP',t:'recall',q:'記述：ポリオでOPVからIPVに全面的に切り替えられた理由を説明せよ。OPVの長所も述べよ。',
+ a:['<b>OPVの長所</b>：経口投与のため腸管に強固な局所免疫（<b>分泌型IgA抗体</b>）を誘導し、野生株の定着・侵入を完全に遮断できる。かつ安価','<b>切替の理由</b>：弱毒株が乳幼児の腸管内で増殖・排泄される過程で、ごくまれに点変異を起こし<b>野生株と同等の強毒株にリバート</b>する','これが接種者本人や、排泄ウイルスに接触した周囲の未免疫者に感染して運動神経細胞を破壊し、生涯にわたる<b>弛緩性運動麻痺（VAPP／ワクチン由来ポリオ VDPV）</b>を起こす','この<b>二次感染リスクを完全に排除する</b>ためIPVへ移行した'],
+ e:'「分泌型IgA」（長所）と「リバート→VAPP」（欠点）を必ず両方書く。'},
+{p:4,s:'§44 VAPP',t:'recall',q:'記述：ポリオの弱毒生ワクチン（OPV）と不活化ワクチン（IPV）について、それぞれの長所と短所を述べよ。',
+ a:['<b>OPVの長所</b>：有効性90%以上。血清中IgGに加え<b>腸管の分泌型IgA抗体</b>を上昇させるため<b>感染予防効果が絶大</b>。<b>価格が安く</b>、経口なので接種の負担が低い','<b>OPVの短所</b>：生ワクチンのため<b>ワクチン関連麻痺（VAPP）</b>のリスクがある。腸管で増殖する過程で<b>変異して強毒化しうる</b>。排泄ウイルスによる<b>周囲への2次感染（VCC）</b>も起こる','<b>IPVの長所</b>：不活化なので<b>麻痺のリスクがない</b>／<b>ウイルスの変異が起こらない</b>／<b>2次感染を防げる</b>','<b>IPVの短所</b>：血清中IgGは上昇するが<b>腸管のIgAは上昇しない</b>ため、経口感染して腸管で増殖するポリオウイルスへの<b>局所免疫が不十分</b>。<b>価格が高く</b>、注射のため<b>2回接種・複数回の来院</b>が必要で乳児の負担が大きい'],
+ e:'記述で「それぞれの長所と短所」を問う出題実績あり。<b>腸管IgAの有無</b>が両者を分ける軸。'},
+{p:4,s:'§44 VAPP',t:'recall',q:'OPVのVAPP・VCCの発生頻度と、併用方式の利点を答えよ。',
+ a:['OPVは世界で毎年<b>40万人</b>の小児をポリオ罹患から救っている','<b>VAPP</b>：OPV投与<b>200〜300万人に1人</b>。日本では<b>440万人あたり1例</b>（1981〜2000年に15例）','<b>VCC（vaccine contact case／接種者周辺への感染）</b>：日本では<b>530万人あたり1例</b>','<b>IPV/OPV併用方式</b>：OPV投与時にすでに血中抗体があるため、<b>OPV株は腸管のみで増殖</b>し、<b>VAPPの発生を95%減少</b>させる'],
+ e:'「利益が上回るか」の判断材料。野生株が多い地域ではOPVの利点がVAPPリスクに勝る、が講義の立場。'},
+{p:4,s:'§44 VAPP',t:'ox',q:'ポリオの不活化ワクチン（IPV）は、弱毒生ワクチン（OPV）より価格が安く、接種が1回で済む。',a:false,
+ e:'×。IPVは<b>OPVより価格が高く</b>、<b>2回接種</b>が必要で注射のため負担も大きい。IPVの長所は<b>2次感染を防げる</b>ことと<b>ウイルスの変異が起こらない</b>こと。'},
+{p:4,s:'§44 VAPP',t:'ox',q:'現在、世界的にはIPVを使用する国が多く、OPVを使う国はほとんどない。',a:false,
+ e:'×。<b>世界的にはOPVを接種する国が多く</b>、IPVへ移行したのは先進国が中心。日本は2012年9月にIPV（4種混合）へ全面移行した。'},
+{p:4,s:'§44 VAPP',t:'ox',q:'日本のポリオ定期接種は、DPT（ジフテリア・百日せき・破傷風）にIPVを混合した4種混合ワクチンで行われる。',a:true,
+ e:'〇。<b>2015年12月から定期接種に導入</b>された4種混合ワクチン。'},
+
+// §45 HPV男児
+{p:4,s:'§45 HPV男児接種',t:'recall',q:'記述：HPVワクチンを男性（男児）へも接種・推奨する意義を2つ述べよ。',
+ a:['① <b>男性自身のHPV関連疾患を直接予防する</b> … 尖圭コンジローマ（6, 11型）、<b>中咽頭がん・肛門がん・陰茎がん</b>','② <b>女性パートナーへの性的接触を介した伝播を遮断</b>し、<b>集団免疫（Herd immunity）</b>により社会全体の子宮頸がん罹患率を低下させる'],
+ e:'日本では<b>2020年</b>から、肛門がん・尖圭コンジローマの予防として男児にもHPVワクチン接種が認められた（<b>4価のみ</b>／<b>任意接種</b>）。'},
+
+// §46 発育鶏卵
+{p:4,s:'§46 発育鶏卵で製造',t:'pick',q:'ニワトリの発育有精卵（またはニワトリ胚培養細胞）を用いて製造されるワクチンはどれか（すべて選べ）',
+ ok:['インフルエンザ不活化ワクチン','麻疹弱毒生ワクチン'],
+ ng:['B型肝炎ワクチン','HPVワクチン','日本脳炎ワクチン','ロタウイルスワクチン','不活化ポリオワクチン'],
+ e:'両ウイルスともニワトリ胚細胞で極めて効率よく増殖する。<b>SPF発育鶏卵</b>の尿膜腔内または胚細胞に接種して培養する。'},
+{p:4,s:'§46 発育鶏卵で製造',t:'ox',q:'インフルエンザワクチンの製造に用いる鶏卵は無精卵でも良い。',a:false,
+ e:'×。<b>胚細胞で増殖させる必要がある</b>ため、必ず<b>有精卵（発育鶏卵）</b>でなければならない。'},
+{p:4,s:'§46 発育鶏卵で製造',t:'ox',q:'麻疹ワクチンは培養細胞でのみ製造され、鶏卵は一切用いられない。',a:false,
+ e:'×。麻疹弱毒生ワクチンも<b>ニワトリ胚培養細胞</b>を用いて製造される。'},
+
+// §47 根絶
+{p:4,s:'§47 根絶・撲滅',t:'recall',q:'記述：ウイルスを地球上から撲滅（根絶）できるための3大条件は？',
+ a:['① <b>自然宿主がヒトのみ</b>であること（動物レゼルボアがない＝人畜共通感染症でない）','② <b>有効性が極めて高く生涯免疫を付与できる優れたワクチン</b>が存在すること','③ 体内で<b>持続感染・潜伏感染（再活性化）を成立させない</b>こと（一過性感染で宿主の治癒とともに100%排除される）'],
+ e:'この3条件で、天然痘（根絶済）／ポリオ・麻疹（ターゲット）／ヘルペス・HBV（撲滅不可能）が全部説明できる。'},
+{p:4,s:'§47 根絶・撲滅',t:'pick',q:'人類が根絶に成功したヒトの感染症の病原体はどれか',
+ ok:['天然痘ウイルス'],
+ ng:['ポリオウイルス','麻疹ウイルス','風疹ウイルス','B型肝炎ウイルス','狂犬病ウイルス'],
+ e:'<b>1980年 WHO根絶宣言</b>。※講義では「人類が根絶した感染症は<b>天然痘と牛疫の2つ</b>」とされる（<b>牛疫は2011年に根絶</b>／ウシの疾患）。「唯一」と書かれた肢に注意。'},
+{p:4,s:'§47 根絶・撲滅',t:'ox',q:'人類がこれまでに根絶に成功した感染症は、天然痘のみである。',a:false,
+ e:'×。<b>天然痘と牛疫の2つ</b>。牛疫（ウシの疾患、麻疹ウイルスの近縁）は<b>2011年に根絶</b>された。ヒトの感染症としては天然痘のみ、が正確な言い方。'},
+{p:4,s:'§47 根絶・撲滅',t:'ox',q:'ポリオは世界から完全に撲滅された。',a:false,
+ e:'×。講義では常在国は<b>ナイジェリア・パキスタン・アフガニスタンの3ヶ国</b>。障害は<b>VDPVの出現</b>と治安・紛争等の<b>政治問題</b>。'},
+{p:4,s:'§47 根絶・撲滅',t:'ox',q:'ヘルペスウイルスやB型肝炎ウイルスは、撲滅計画の対象ウイルスとして適している。',a:false,
+ e:'×。<b>潜伏感染・持続感染（cccDNA形成など）</b>を成立させ体内から完全排除できないため、生物学的に撲滅は不可能。'},
+
+// §48 定期接種の変遷
+{p:4,s:'§48 定期接種の変遷',t:'recall',q:'近年、定期予防接種に組み込まれた（変更された）ウイルスと時期を答えよ。',
+ a:['<b>ポリオ</b>… <b>2012年9月</b>に生ワクチン(OPV)から不活化ワクチン(IPV)の定期接種へ完全移行','<b>水痘・帯状疱疹</b>… <b>2014年10月</b>〜定期接種化','<b>B型肝炎</b>… <b>2016年10月</b>〜<b>0歳児</b>を対象に定期接種化','<b>ロタウイルス</b>… <b>2020年10月</b>〜定期接種化'],
+ e:'移行時期は機械的に問われる。ポリオ2012→水痘2014→HBV2016→ロタ2020、と2年おきの並びで覚える。'},
+{p:4,s:'§48 定期接種の変遷',t:'ox',q:'流行性耳下腺炎（ムンプス）ワクチンは、日本では定期接種である。',a:false,
+ e:'×。多くの先進国ではMMRとして定期接種だが、<b>日本では現在も「任意接種」</b>（無菌性髄膜炎の副反応問題等による）。頻出のひっかけ。'},
+{p:4,s:'§48 定期接種の変遷',t:'ox',q:'日本では2012年9月に、ポリオの経口生ワクチン（OPV）から不活化ワクチン（IPV）の定期接種へ完全移行した。',a:true,
+ e:'〇。理由はVAPP（ワクチン関連麻痺）の回避（§44）。'},
+
+// §49 抗ウイルス薬の有無と作用点
+{p:4,s:'§49 抗ウイルス薬の有無',t:'pick',q:'抗ウイルス薬が実用化されているのはどれか（すべて選べ）',
+ ok:['HIV','単純ヘルペスウイルス','水痘・帯状疱疹ウイルス','サイトメガロウイルス','B型肝炎ウイルス','C型肝炎ウイルス','インフルエンザウイルス'],
+ ng:['麻疹ウイルス','ヒトパルボウイルスB19','ヒトパピローマウイルス','ノロウイルス','ロタウイルス','ムンプスウイルス','風疹ウイルス'],
+ e:'過去問の直球。<b>麻疹・パルボB19・HPVには抗ウイルス薬がない</b>（予防はワクチンのみ、あるいは対症療法）。'},
+{p:4,s:'§49 抗ウイルス薬の有無',t:'recall',q:'主なウイルスと抗ウイルス薬の対応を答えよ。',
+ a:['<b>HSV・VZV</b> … アシクロビル、バラシクロビル、ファムシクロビル','<b>CMV</b> … <b>ガンシクロビル</b>（アシクロビルは効かない）','<b>HIV</b> … ラミブジン、アタザナビル、ラルテグラビル','<b>HBV</b> … <b>核酸アナログ製剤</b>（エンテカビル、TDF、TAF）＋ペグIFN。完治は困難','<b>HCV</b> … <b>DAA</b>（ソホスブビル等）。完治可能','<b>インフルエンザ</b> … オセルタミビル・ザナミビル・ペラミビル・ラニナミビル（<b>NA阻害</b>）、バロキサビル（<b>mRNA合成阻害</b>）、ファビピラビル（<b>RNAポリメラーゼ阻害</b>）','<b>ラッサ熱</b> … リバビリン（発症6日以内）'],
+ e:'抗インフル薬は<b>発症後48時間以内</b>の投与。作用点（NA阻害／mRNA合成阻害／RNAポリメラーゼ阻害）まで問われる。'},
+{p:4,s:'§49 抗ウイルス薬の有無',t:'recall',q:'記述：アシクロビルがHSV・VZVには有効でCMVには無効なのはなぜか。',
+ a:['アシクロビルはウイルスの<b>チミジンキナーゼ（TK）</b>によってリン酸化されて初めて活性化する','<b>HSV・VZVはTKをもつ</b>ため有効。感染していない正常細胞のDNA伸長は傷害しない（＝選択毒性）','<b>CMVはTKをもたない</b>ため無効。CMVには<b>ガンシクロビル</b>を用いる','なお神経細胞はTKを発現しないため、HSV・VZVが再活性化してDNAを複製するにはウイルス由来のTKが必要となる'],
+ e:'「なぜ選択的に効くのか」＝TK依存、が答えの軸。CMVだけ外れる理由も同じ論理で説明できる。'},
+{p:4,s:'§49 抗ウイルス薬の有無',t:'ox',q:'サイトメガロウイルス感染症の治療にはアシクロビルが第一選択である。',a:false,
+ e:'×。<b>CMVはチミジンキナーゼをもたない</b>のでアシクロビルは効かない。<b>ガンシクロビル</b>を用いる。'},
+{p:4,s:'§49 抗ウイルス薬の有無',t:'ox',q:'潜伏感染している単純ヘルペスウイルスは、アシクロビルでは排除できない。',a:true,
+ e:'〇。アシクロビルは<b>ウイルスDNA複製</b>に作用するが、潜伏感染中のゲノムは複製していないため効かない（§37）。'},
+
+// §50 ワクチンが実用化されていないウイルス
+{p:4,s:'§50 ワクチンがないウイルス',t:'pick',q:'世界的にみてもワクチンが実用化されていないのはどれか（すべて選べ）',
+ ok:['HIV','C型肝炎ウイルス','サイトメガロウイルス','単純ヘルペスウイルス','EBウイルス','ノロウイルス','ラッサウイルス'],
+ ng:['麻疹ウイルス','風疹ウイルス','水痘・帯状疱疹ウイルス','ロタウイルス','B型肝炎ウイルス','ヒトパピローマウイルス','日本脳炎ウイルス','狂犬病ウイルス','黄熱ウイルス'],
+ e:'「日本で定期接種でない」ではなく「<b>世界的にみて実用化されていない</b>」を問う点に注意。HBVにはワクチンがあるが<b>HCVにはない</b>。'},
+{p:4,s:'§50 ワクチンがないウイルス',t:'recall',q:'記述：HIVワクチンの開発が難しいのはなぜか。',
+ a:['HIVは危険なウイルスであるため<b>不活化ワクチン</b>の開発が進められてきた','しかし<b>逆転写酵素の読み間違い（変異）が多い</b>ため、ウイルスの吸着に重要な<b>エンベロープのgp120が変異しやすい</b>','そのため<b>有効な中和抗体を産生させる不活化ワクチンを作ることが難しい</b>'],
+ e:'§21（抗HIV抗体は中和能をもたない）とコラム①（gp120→CD4）が、そのままワクチン開発困難の理由になる。'},
+
+// §51 ウイルスベクターの分類
+{p:4,s:'§51 ウイルスベクターの分類',t:'recall',q:'ウイルスベクターを4類型に分けて、それぞれの代表と特性を述べよ。',
+ a:['<b>①標的細胞でウイルス自身を複製できる</b> … センダイウイルスベクター、複製型アデノウイルスベクター','<b>②複製せず、細胞ゲノムに組み込みできる</b>（長期発現させる細胞株用）… <b>レトロウイルスベクター、レンチウイルスベクター</b>','<b>③複製せず、組み込みもできない</b>（一過性のトランスフェクション用）… <b>アデノウイルスベクター</b>','<b>④複製せず、積極的には組み込まれない</b>が発現は長期持続 … <b>アデノ随伴ウイルス（AAV）ベクター</b>'],
+ e:'「組み込むか／複製するか」の2軸で4分類。組み込む②だけが<b>挿入変異による発がんリスク</b>を負う（§34）。'},
+{p:4,s:'§51 ウイルスベクターの分類',t:'recall',q:'レトロウイルスベクターの危険性を、発がん以外も含めて述べよ。',
+ a:['<b>挿入変異</b>：宿主染色体に<b>ランダムに組み込まれる</b>ため、がん抑制遺伝子を破壊して<b>がん化</b>を誘導しうる（iPS細胞が発がんしやすいと言われる理由でもある）','<b>複製可能ウイルスの出現</b>：パッケージング細胞のゲノムとの<b>組換え</b>により、複製能をもつウイルスが生じる危険がある'],
+ e:'過去問で「がん化の誘導<b>以外</b>に危険なのはどのような現象か」と問われた実績あり。'},
+{p:4,s:'§51 ウイルスベクターの分類',t:'ox',q:'アデノ随伴ウイルス（AAV）ベクターは宿主染色体に積極的には組み込まれないが、発現は長期持続する。',a:true,
+ e:'〇。組み込まれないので挿入変異のリスクが低く、かつ長期発現する点が利点。ゲノムは<b>一本鎖DNA</b>（§1）。'},
+
+/* ---------------- 第6部 臓器指向性（トロピズム） ---------------- */
+// §52 中枢神経指向性
+{p:5,s:'§52 中枢神経指向性',t:'recall',q:'そもそも「トロピズム（組織指向性）」は何によって規定されるか。',
+ a:['ウイルス表面の<b>糖タンパク質</b>と、宿主細胞膜上の<b>特定の受容体（レセプター）</b>が特異的に結合すること','組織特異的な<b>宿主因子（プロテアーゼ等）の分布</b>'],
+ e:'「なぜこの臓器なのか」を受容体で説明できるようにしておく。§9の受容体まとめと直結。'},
+{p:5,s:'§52 中枢神経指向性',t:'pick',q:'無菌性髄膜炎を惹起する主なウイルスはどれか（すべて選べ）',
+ ok:['エンテロウイルス属（コクサッキー・エコー）','ムンプスウイルス','水痘・帯状疱疹ウイルス'],
+ ng:['ロタウイルス','ノロウイルス','B型肝炎ウイルス','C型肝炎ウイルス','ヒトパピローマウイルス','ライノウイルス'],
+ e:'<b>エンテロウイルス属が小児の無菌性髄膜炎の最多原因</b>で、<b>ムンプスがそれに次いで多い</b>。ムンプスは「任意接種ワクチンで予防できる合併症」として最頻出。'},
+{p:5,s:'§52 中枢神経指向性',t:'recall',q:'小児の無菌性髄膜炎の原因を、多い順に2つ挙げよ。',
+ a:['1位 <b>エンテロウイルス属</b>（コクサッキーA群/B群、エコーウイルスなど）','2位 <b>ムンプスウイルス</b>（流行性耳下腺炎の<b>10%</b>に臨床的な髄膜炎、患者の60%で髄液細胞数増多）'],
+ e:'ムンプスは「エンテロウイルスに次いで多い」と講義で明示される。ワクチンで防げる髄膜炎として頻出。'},
+{p:5,s:'§52 中枢神経指向性',t:'pick',q:'脳炎・脳症を惹起するのはどれか（すべて選べ）',
+ ok:['単純ヘルペスウイルス1型','日本脳炎ウイルス','狂犬病ウイルス','ニパウイルス','インフルエンザウイルス','麻疹ウイルス'],
+ ng:['ノロウイルス','ロタウイルス','ヒトパピローマウイルス','C型肝炎ウイルス','ライノウイルス','A型肝炎ウイルス'],
+ e:'HSV-1＝成人の<b>急性局所壊死性脳炎</b>の主原因。インフルエンザ・麻疹は合併症としての<b>脳症</b>（<b>サイトカインストーム</b>が主病態、アスピリン禁忌）。'},
+{p:5,s:'§52 中枢神経指向性',t:'ox',q:'成人の急性局所壊死性脳炎の主原因は単純ヘルペスウイルス1型であり、アシクロビルが第一選択である。',a:true,
+ e:'〇。ヘルペス脳炎は治療可能な脳炎なので、疑ったら直ちにアシクロビル。'},
+{p:5,s:'§52 中枢神経指向性',t:'ox',q:'狂犬病ウイルスは、血行性（ウイルス血症）に中枢神経へ到達して脳炎を起こす。',a:false,
+ e:'×。咬傷部位の<b>末梢神経から神経軸索内を逆行性に移動</b>して脳に達する。<b>ウイルス血症を起こさない</b>のが超頻出ポイント。'},
+{p:5,s:'§52 中枢神経指向性',t:'recall',q:'遅発性（スロー）ウイルス感染症のSSPEとPMLを対比せよ。',
+ a:['<b>SSPE（亜急性硬化性全脳炎）</b>… 原因は<b>変異型（異型）麻疹ウイルス</b>の持続感染。数年の長い潜伏期を経て進行性・致死的に脳を破壊。脳波で<b>高振幅PSD</b>','<b>PML（進行性多巣性白質脳症）</b>… 原因は<b>JCウイルス</b>（ポリオーマウイルス科）。<b>免疫不全患者（AIDSなど）</b>で<b>少突起膠細胞</b>を破壊。予後不良'],
+ e:'「原因ウイルス／標的細胞／宿主背景」の3点で対比する。'},
+{p:5,s:'§52 中枢神経指向性',t:'pick',q:'遅発性（スロー）ウイルス感染症として脳病変を起こすのはどれか（すべて選べ）',
+ ok:['変異型麻疹ウイルス（SSPE）','JCウイルス（PML）'],
+ ng:['ライノウイルス','ロタウイルス','A型肝炎ウイルス','RSウイルス','ノロウイルス'],
+ e:'いずれも数年単位の潜伏を経て進行する。'},
+
+// §53 呼吸器指向性
+{p:5,s:'§53 呼吸器指向性',t:'recall',q:'ライノウイルスが上気道（鼻腔）だけに限局して増殖する理由を2つ挙げよ。',
+ a:['<b>増殖至適温度が33℃と低い</b>ため、体温より低い鼻腔粘膜でのみよく増殖する','<b>酸に極めて弱い</b>ため胃酸で失活し、腸管に達して感染することがない'],
+ e:'ノンエンベロープなのに<b>酸に弱い</b>のが例外。§5の「ノンエンベロープ＝酸に強い」の一般論に対する反例として狙われる。'},
+{p:5,s:'§53 呼吸器指向性',t:'pick',q:'小児のクループ（喉頭・気管・気管支の炎症）の主な原因はどれか（すべて選べ）',
+ ok:['ヒトパラインフルエンザウイルス1型','ヒトパラインフルエンザウイルス2型'],
+ ng:['RSウイルス','ヒトパラインフルエンザウイルス3型','ヒトメタニューモウイルス','ライノウイルス','ロタウイルス'],
+ e:'HPIVは<b>1・2型＝クループ</b>、<b>3型＝下気道炎</b>と役割が分かれる。型の入れ替えが頻出。'},
+{p:5,s:'§53 呼吸器指向性',t:'pick',q:'乳幼児の細気管支炎・肺炎（下気道炎）の主原因はどれか（すべて選べ）',
+ ok:['RSウイルス','ヒトパラインフルエンザウイルス3型','ヒトメタニューモウイルス'],
+ ng:['ヒトパラインフルエンザウイルス1型','ヒトパラインフルエンザウイルス2型','ライノウイルス','ノロウイルス','ロタウイルス'],
+ e:'<b>RSウイルスは乳幼児肺炎の約50%</b>を占める最重要ウイルス。HPIV-3は病原性が高く下気道炎まで起こす。hMPVは1〜2歳に好発。'},
+{p:5,s:'§53 呼吸器指向性',t:'ox',q:'RSウイルスは、成人の肺炎の原因ウイルスとしても最優先で考えるべきである。',a:false,
+ e:'×。<b>乳幼児</b>の肺炎の約50%を占める最重要ウイルスだが、<b>成人の肺炎原因としては優先度が低い</b>。'},
+{p:5,s:'§53 呼吸器指向性',t:'recall',q:'アデノウイルスの「群」と疾患の対応を答えよ。',
+ a:['<b>B群（3, 7型）</b> … 咽頭結膜熱（プール熱）','<b>C群（1, 2, 5型）</b> … 小児の感冒（上気道炎）','<b>D群（8, 19, 37型）</b> … 流行性角結膜炎（EKC）','<b>F群（40, 41型）</b> … 感染性胃腸炎（腸重積を合併しやすい）'],
+ e:'アデノは呼吸器・眼・腸管と群ごとに標的が変わる。ここがアデノ最大の得点源。'},
+{p:5,s:'§53 呼吸器指向性',t:'pick',q:'重症肺炎・パンデミックを惹起する呼吸器ウイルスはどれか（すべて選べ）',
+ ok:['インフルエンザAウイルス','インフルエンザBウイルス','SARS-CoV-1','MERS-CoV','SARS-CoV-2'],
+ ng:['ライノウイルス','ノロウイルス','ロタウイルス','ヒトパピローマウイルス','A型肝炎ウイルス'],
+ e:'オルソミクソウイルス科とコロナウイルス科。'},
+
+// §54 消化器指向性
+{p:5,s:'§54 消化器指向性',t:'ox',q:'消化器（腸管）指向性ウイルスは、すべてエンベロープを持たない。',a:true,
+ e:'〇。胃酸と、強力な界面活性剤である<b>胆汁酸</b>を通過して腸管上皮に達する必要があるため。§5と同じ論理。'},
+{p:5,s:'§54 消化器指向性',t:'recall',q:'急性胃腸炎を起こすノロ／ロタ／アデノF群の各論を述べよ。',
+ a:['<b>ノロウイルス</b>… <b>十二指腸・空腸</b>の上皮細胞に感染し<b>絨毛の萎縮</b>を惹起。<b>乾燥に強く塵埃感染</b>する','<b>ロタウイルス</b>… 乳幼児の<b>白色下痢症</b>の主原因。<b>2020年10月に定期接種化</b>され減少','<b>アデノウイルスF群（40, 41型）</b>… 小児の感染性胃腸炎。<b>腸重積症</b>を合併しやすい'],
+ e:'感染部位（十二指腸・空腸）、便の色（白色）、合併症（腸重積）が各論の狙われどころ。'},
+{p:5,s:'§54 消化器指向性',t:'ox',q:'ノロウイルスは乾燥に弱いため、塵埃を介した感染は起こらない。',a:false,
+ e:'×。<b>乾燥に強く</b>、嘔吐物が乾燥して舞い上がることによる<b>塵埃感染</b>を起こす。'},
+{p:5,s:'§54 消化器指向性',t:'recall',q:'ポリオ・エンテロウイルス属における「腸管＝侵入門戸」としての感染経路を述べよ。',
+ a:['経口侵入 → <b>腸管粘膜やリンパ節で一次増殖</b> → <b>ウイルス血症</b>を起こす → <b>標的臓器（中枢神経など）へ移行</b>'],
+ e:'腸管で局所感染して下痢を起こすだけのノロ・ロタとの<b>対比</b>で理解する。'},
+
+// §55 肝臓指向性
+{p:5,s:'§55 肝臓指向性',t:'recall',q:'肝炎ウイルス感染で肝機能障害（肝炎）が起こるのは、なぜか。',
+ a:['ウイルスによる直接的な細胞傷害ではなく','<b>ウイルス感染肝細胞が、宿主の細胞性免疫（キラーT細胞／CTL）によって破壊される</b>ことで肝炎が生じる'],
+ e:'§33（感染細胞の排除はCTL・ADCCが主役）と同じ原理。「免疫が肝細胞を壊している」という視点が記述で効く。'},
+{p:5,s:'§55 肝臓指向性',t:'pick',q:'慢性化し、発がんリスクをもつ肝炎ウイルスはどれか（すべて選べ）',
+ ok:['B型肝炎ウイルス','C型肝炎ウイルス','D型肝炎ウイルス'],
+ ng:['A型肝炎ウイルス','E型肝炎ウイルス'],
+ e:'<b>経口感染（A・E）＝ノンエンベロープ＝急性肝炎のみで慢性化なし</b>／<b>血液・体液感染（B・C・D）＝エンベロープあり＝慢性化あり</b>。この対応が幹。'},
+{p:5,s:'§55 肝臓指向性',t:'ox',q:'D型肝炎ウイルスは単独で感染・増殖することができる。',a:false,
+ e:'×。<b>HBVをヘルパーウイルスとして必要とする</b>ため、単独感染は不可能。'},
+{p:5,s:'§55 肝臓指向性',t:'recall',q:'肝炎ウイルスA〜Eを、感染経路・エンベロープ・慢性化の3点で総整理せよ。',
+ a:['<b>HAV</b>（ピコルナ）… 経口／<b>ノンエンベ</b>／慢性化なし','<b>HBV</b>（ヘパドナ・DNA）… 血液・性・母子／エンベあり／<b>慢性化・肝がん</b>／cccDNAで排除不能','<b>HCV</b>（フラビ・RNA）… 血液／エンベあり／<b>慢性化・肝がん</b>／DAAで根治可能','<b>HDV</b>… 血液／エンベあり／<b>HBV依存（単独感染不可）</b>','<b>HEV</b>（ヘペ）… 経口（生肉）／<b>ノンエンベ</b>／慢性化なし／<b>妊婦後期20%劇症化</b>・3,4型が人畜共通'],
+ e:'A・Eが経口＋ノンエンベ、B・C・Dが血液＋エンベ。ここを軸に各論をぶら下げる。'},
+
+// §56 皮膚・粘膜・眼
+{p:5,s:'§56 皮膚・粘膜・眼',t:'pick',q:'皮膚・粘膜に病変を形成するのはどれか（すべて選べ）',
+ ok:['単純ヘルペスウイルス1型','単純ヘルペスウイルス2型','水痘・帯状疱疹ウイルス','ヒトパピローマウイルス','伝染性軟属腫ウイルス'],
+ ng:['ノロウイルス','ロタウイルス','C型肝炎ウイルス','ライノウイルス','RSウイルス'],
+ e:'伝染性軟属腫ウイルス（<b>ポックスウイルス科</b>）＝<b>みずいぼ</b>（小児の良性皮膚病変）。'},
+{p:5,s:'§56 皮膚・粘膜・眼',t:'recall',q:'HPVの型と病変を3系統に分けて答えよ。',
+ a:['<b>1, 2, 4型など</b> … 疣贅（いぼ）＝<b>良性</b>','<b>6, 11型</b> … 尖圭コンジローマ','<b>16, 18型など</b> … 上皮内がん・子宮頸がん＝<b>悪性</b>'],
+ e:'§15の「6,11 vs 16,18」に、良性の疣贅（1,2,4型）を加えた3系統で押さえる。'},
+{p:5,s:'§56 皮膚・粘膜・眼',t:'pick',q:'流行性角結膜炎（EKC）の主な原因はどれか（すべて選べ）',
+ ok:['アデノウイルスD群8型','アデノウイルスD群19型','アデノウイルスD群37型'],
+ ng:['アデノウイルスB群3型','アデノウイルスB群7型','エンテロウイルス70型','単純ヘルペスウイルス1型','ロタウイルス'],
+ e:'EKCは<b>発熱やのどの痛みを伴わない</b>。発熱＋咽頭痛＋結膜炎の3主徴なら<b>B群3, 7型の咽頭結膜熱（プール熱）</b>。'},
+{p:5,s:'§56 皮膚・粘膜・眼',t:'ox',q:'流行性角結膜炎（EKC）では、発熱と咽頭痛を伴う。',a:false,
+ e:'×。EKCは<b>眼症状のみ</b>。発熱・咽頭痛・結膜炎の<b>3主徴</b>を呈するのは<b>咽頭結膜熱（プール熱／アデノB群3, 7型）</b>。'},
+{p:5,s:'§56 皮膚・粘膜・眼',t:'recall',q:'ウイルス性の眼科病変を5つ、原因ウイルスとともに整理せよ。',
+ a:['<b>流行性角結膜炎（EKC）</b> … アデノD群 8, 19, 37型／発熱・咽頭痛なし','<b>咽頭結膜熱（プール熱）</b> … アデノB群 3, 7型／<b>発熱・咽頭痛・結膜炎の3主徴</b>','<b>急性出血性結膜炎（AHC）</b> … <b>EV70・CA24変異株</b>（＝エンテロウイルス70型、コクサッキーA24変異株）。EKCの結膜炎が出血性のときは、これとの鑑別を要する','<b>ヘルペス性角膜炎</b> … <b>HSV-1</b>の再活性化／<b>樹枝状</b>病変／失明原因','<b>急性網膜壊死（ARN）</b> … <b>VZV・HSV</b>／健康成人に<b>片眼性</b>の激しい炎症'],
+ e:'アデノD群（眼のみ）とB群（全身症状あり）の区別が最大の鑑別ポイント。'},
+
+// §57 かぜ症候群
+{p:5,s:'§57 かぜ症候群',t:'pick',q:'かぜ症候群（上気道炎）の主要な原因ウイルスはどれか（すべて選べ）',
+ ok:['ライノウイルス','ヒトコロナウイルス（229E, OC43, NL63, HKU1）','アデノウイルス','RSウイルス','ヒトパラインフルエンザウイルス'],
+ ng:['ノロウイルス','ロタウイルス','B型肝炎ウイルス','ヒトパピローマウイルス','麻疹ウイルス','狂犬病ウイルス'],
+ e:'この多様性そのものが「風邪に何度も罹患する理由」の第1の根拠（§39）。'},
+{p:5,s:'§57 かぜ症候群',t:'recall',q:'かぜ症候群の原因ウイルスを、割合と特徴とともに挙げよ。',
+ a:['<b>ライノウイルス</b>… かぜの<b>20〜30%</b>。至適温度33℃で上気道のみ。<b>通常発熱を伴わない</b>。血清型100種以上でワクチンなし','<b>ヒトコロナウイルス（229E, OC43, NL63, HKU1）</b>… 約<b>15%</b>（<b>冬季は35%</b>）','<b>アデノウイルス（主にC群 1, 2, 5, 6型）</b>… 小児のかぜ','<b>RSウイルス</b>… 乳幼児では重篤な細気管支炎・肺炎だが、<b>年長児・成人では軽い鼻風邪</b>','<b>ヒトパラインフルエンザウイルス</b>… かぜのほか小児の<b>クループ</b>'],
+ e:'季節性ヒトコロナは4株（229E / OC43 / NL63 / HKU1）。SARS-CoV-2などの重症肺炎コロナとは別物（§53）。'},
+{p:5,s:'§57 かぜ症候群',t:'ox',q:'ライノウイルスによるかぜは、高熱を伴うのが特徴である。',a:false,
+ e:'×。増殖至適温度が33℃と低く<b>上気道（鼻腔）に限局</b>するため、<b>通常発熱は伴わない</b>。'},
+{p:5,s:'§57 かぜ症候群',t:'ox',q:'RSウイルスは、年長児や成人では軽い「鼻風邪」ですむことが多い。',a:true,
+ e:'〇。ただし<b>乳幼児では細気管支炎・肺炎</b>を起こし、乳幼児肺炎の約50%を占める（§53）。'},
+
+// §58 ウイルス血症の有無
+{p:5,s:'§58 ウイルス血症の有無',t:'pick',q:'ウイルス血症を<u>起こさない</u>のはどれか（すべて選べ）',
+ ok:['狂犬病ウイルス','ヒトパピローマウイルス'],
+ ng:['麻疹ウイルス','HIV','ヒトパルボウイルスB19','ポリオウイルス','デングウイルス','風疹ウイルス','サイトメガロウイルス'],
+ e:'この2つを<b>除外</b>できれば「ウイルス血症を発症するのはどれか」型の問題は解ける。'},
+{p:5,s:'§58 ウイルス血症の有無',t:'recall',q:'狂犬病とHPVがウイルス血症を起こさない理由を、それぞれ説明せよ。',
+ a:['<b>狂犬病ウイルス</b>：咬傷部位の<b>筋肉で増殖</b>したあと、<b>末梢神経の軸索を逆行性（神経行性）に移動</b>して脳に達する。血流を使わないためウイルス血症を起こさない','<b>HPV</b>：特定の体表組織（皮膚・粘膜）の<b>上皮基底細胞</b>に感染し、<b>その局所でのみ増殖して</b>イボや腫瘍を形成する。全身に播種しないためウイルス血症を起こさない'],
+ e:'「神経を伝う」か「局所にとどまる」か。理由が2つで異なる点まで書けると記述で差がつく。'},
+{p:5,s:'§58 ウイルス血症の有無',t:'recall',q:'一次ウイルス血症と二次ウイルス血症の違いは？　また局所感染と全身感染の違いは？',
+ a:['<b>局所感染</b>：ウイルスが侵入部位の上皮に感染・増殖し、そこに留まって発病する（鼻かぜ、急性出血性結膜炎）','<b>①一次ウイルス血症</b>：局所感染後、近くの<b>リンパ節を経て血中に入る</b>','<b>②</b> 血流で<b>全身の標的臓器に運ばれて増殖</b>する','<b>③二次ウイルス血症</b>：標的臓器で増殖したウイルスが<b>再び血中に入る</b>。これにより感染が増悪し、他個体へも伝播する（麻疹、風疹、ポリオ）'],
+ e:'「1次＝侵入部位から血へ」「2次＝標的臓器から血へ」。全身性ウイルス感染症はこの2段階を踏む。'},
+{p:5,s:'§58 ウイルス血症の有無',t:'recall',q:'ウイルスが体内を運ばれる様式を2つに分け、それぞれの例を挙げよ。',
+ a:['【ウイルス血症（一般的）】① <b>粒子が遊離して</b>運ばれる … ポリオ、HBV、HCV ／ ② <b>リンパ球や単球に感染して</b>運ばれる … CMV、HIV-1、HTLV-1','【神経内伝播（一部）】① <b>神経節まで上行</b> … 単純ヘルペスウイルス ／ ② <b>脳まで上行</b> … <b>狂犬病ウイルス</b>'],
+ e:'狂犬病がウイルス血症を起こさない理由（§58）は、この「神経内伝播で脳まで上行する」型に当たるから。'},
+{p:5,s:'§58 ウイルス血症の有無',t:'ox',q:'ヒトパピローマウイルスはウイルス血症を起こして全身に播種する。',a:false,
+ e:'×。<b>上皮基底細胞で局所増殖するのみ</b>でウイルス血症を起こさない。'},
+
+// §59 増殖部位（免疫細胞・造血系）
+{p:5,s:'§59 増殖部位（免疫細胞・造血系）',t:'pick',q:'免疫細胞・造血系細胞そのものを増殖の場とするのはどれか（すべて選べ）',
+ ok:['麻疹ウイルス','HIV','ヒトパルボウイルスB19'],
+ ng:['ライノウイルス','ノロウイルス','ロタウイルス','A型肝炎ウイルス','狂犬病ウイルス','ヒトパピローマウイルス'],
+ e:'麻疹＝リンパ組織／HIV＝CD4陽性T細胞・マクロファージ／パルボB19＝赤芽球前駆細胞。'},
+{p:5,s:'§59 増殖部位（免疫細胞・造血系）',t:'recall',q:'麻疹に罹ると細菌性肺炎などの二次感染を併発しやすいのはなぜか。',
+ a:['受容体である<b>SLAM（CD150）</b>を介して、<b>リンパ節・脾臓・胸腺</b>など全身の<b>免疫細胞（リンパ組織）で爆発的に増殖</b>する','これにより<b>免疫系が一過性に崩壊（免疫抑制）</b>するため、細菌性肺炎などの重篤な二次感染を併発しやすくなる'],
+ e:'麻疹は「発疹の病気」ではなく「免疫細胞の病気」。受容体SLAM（§手口①）と直結する。'},
+{p:5,s:'§59 増殖部位（免疫細胞・造血系）',t:'recall',q:'HIVとパルボB19の増殖部位と、その帰結を答えよ。',
+ a:['<b>HIV</b>… <b>CD4陽性T細胞・マクロファージ</b>で増殖しこれらを破壊 → 細胞性免疫が崩壊しAIDSへ','<b>ヒトパルボウイルスB19</b>… <b>赤芽球前駆細胞</b>の<b>P抗原</b>を受容体として感染・増殖 → 造血が一時停止 → 胎児感染では<b>胎児貧血→胎児水腫</b>（§14）'],
+ e:'「どの細胞で増えるか」が、そのまま症状（免疫不全／貧血）を決めている。'},
+
+/* ---------------- 第7部 臨床兆候による鑑別 ---------------- */
+// §60 小児の発熱＋発疹
+{p:6,s:'§60 小児の発熱と発疹',t:'recall',q:'小児の発疹性疾患6つの原因ウイルスを答えよ。',
+ a:['<b>麻疹</b> … 麻疹ウイルス','<b>風疹</b> … 風疹ウイルス','<b>水痘</b> … 水痘・帯状疱疹ウイルス（VZV）','<b>突発性発疹</b> … <b>HHV-6B</b>, HHV-7','<b>伝染性紅斑（リンゴ病）</b> … ヒトパルボウイルスB19','<b>手足口病</b> … コクサッキーA16, A10, <b>エンテロウイルス71</b>'],
+ e:'この6疾患の鑑別が「小児の発疹性疾患」問題の全部。'},
+{p:6,s:'§60 小児の発熱と発疹',t:'recall',q:'麻疹と風疹の皮疹・随伴所見の違いを述べよ。',
+ a:['<b>麻疹</b>：皮疹は<b>融合する</b>。解熱後も<b>色素沈着</b>が残り落屑を伴う。<b>二峰性発熱</b>・発疹に先立つ<b>コプリック斑</b>','<b>風疹</b>：皮疹は<b>融合しない</b>。<b>3徴候</b>＝発熱・発疹・<b>リンパ節腫脹（耳介後部・後頭部・頸部）</b>が同時に出現。<b>不顕性感染が15〜30%</b>'],
+ e:'「融合する／しない」「色素沈着を残す／残さない」「リンパ節腫脹の有無」が3大鑑別点。'},
+{p:6,s:'§60 小児の発熱と発疹',t:'ox',q:'出産直前の妊婦が風疹に初感染すると、児は先天性風疹症候群を発症する。',a:false,
+ e:'×。危険なのは<b>妊娠20週頃までの初期感染</b>。出産直前の感染ではCRSは起こらない。'},
+{p:6,s:'§60 小児の発熱と発疹',t:'ox',q:'風疹は不顕性感染がほとんどなく、感染すればほぼ全例が発症する。',a:false,
+ e:'×。風疹は<b>不顕性感染が15〜30%</b>存在する。ほぼ全例が発症するのは<b>麻疹</b>（§36）。'},
+{p:6,s:'§60 小児の発熱と発疹',t:'recall',q:'突発性発疹の典型的な臨床経過を述べよ。',
+ a:['母体からの<b>移行抗体が消失する生後6か月〜1歳頃</b>に好発','突然<b>38℃以上の高熱が3日間持続</b>','<b>解熱すると同時に</b>、体幹を中心に鮮紅色の斑丘疹が出現','発熱初期に<b>熱性痙攣</b>を極めて合併しやすい'],
+ e:'<b>「解熱と同時に発疹」</b>が最大の鑑別点。麻疹（発疹と同時に高熱＝第2峰）と真逆。'},
+{p:6,s:'§60 小児の発熱と発疹',t:'ox',q:'HHV-7は母体からの移行抗体がHHV-6Bより早く消失するため、HHV-7による突発性発疹が先に起こる。',a:false,
+ e:'×。<b>HHV-7の方が移行抗体が長く持続する</b>ため、<b>HHV-6Bが先、HHV-7が後</b>。突発性発疹に2回かかることがあるのはこのため。'},
+{p:6,s:'§60 小児の発熱と発疹',t:'recall',q:'水痘の皮疹の特徴と、感染力が消失する条件は？',
+ a:['紅斑・丘疹・水疱・膿疱・痂皮が<b>混在する</b>（新旧の皮疹が同時に存在）／強いかゆみを伴う全身性発疹','<b>すべての水疱が痂皮化</b>すれば、周囲への感染力は消失する'],
+ e:'「混在」が水痘の鑑別点。登校再開基準にも直結する。'},
+{p:6,s:'§60 小児の発熱と発疹',t:'ox',q:'水痘で一部の水疱が痂皮化していれば、周囲へ感染を広げる心配はない。',a:false,
+ e:'×。<b>すべての水疱が痂皮化</b>して初めて感染力が消失する。'},
+{p:6,s:'§60 小児の発熱と発疹',t:'ox',q:'手足口病は突然の高熱が3日続き、解熱とともに手足に水疱が出る。',a:false,
+ e:'×。それは<b>突発性発疹</b>の経過。手足口病は<b>発熱が多くなく通常軽度</b>で、口腔粘膜・手のひら・足の裏・お尻に水疱性発疹を作る。'},
+{p:6,s:'§60 小児の発熱と発疹',t:'recall',q:'伝染性紅斑（リンゴ病）の皮疹の経過と、診断上の注意点は？',
+ a:['両頬の鮮やかな<b>「リンゴ様紅斑」</b>に続き、手足に<b>網目状（レース状）の紅斑</b>が出現','頬に発疹が出た時期には、<b>ウイルス血症やウイルス排泄は完全に終了</b>している → <b>病変部からウイルスを分離できない</b>'],
+ e:'§27と直結。発疹＝免疫応答の結果であって、ウイルス増殖の最中ではない。'},
+{p:6,s:'§60 小児の発熱と発疹',t:'pick',q:'小児の発疹性疾患のうち、空気感染対策（陰圧室・N95）が必要なのはどれか（すべて選べ）',
+ ok:['麻疹','水痘'],
+ ng:['風疹','突発性発疹','伝染性紅斑（リンゴ病）','手足口病'],
+ e:'§13と直結。風疹は<b>飛沫感染</b>なので衝立や2m距離で遮断できる。'},
+
+// §61 口腔内病変 詳細
+{p:6,s:'§61 口腔内病変の精密鑑別',t:'recall',q:'口腔内3病変を、原因ウイルス・部位・随伴症状まで正確に述べよ。',
+ a:['<b>コプリック斑</b>：麻疹ウイルス／<b>カタル期（発疹期の数日前）</b>／<b>臼歯対面の頬粘膜</b>／周囲に<b>赤暈</b>を伴う白色の微小斑／発疹出現時には急速に消失','<b>ヘルパンギーナ</b>：<b>コクサッキーA群</b>（B群・エコーも）／突然の高熱とともに<b>軟口蓋・口蓋垂の周囲の咽頭粘膜</b>に強い痛みを伴う多数の小水疱・浅い潰瘍／小児の代表的な<b>夏かぜ</b>','<b>歯肉口内炎</b>：<b>HSV-1の初感染時</b>／<b>口腔粘膜・歯肉全体</b>に高度の浮腫・びらん・多数の小水疱／<b>劇烈な接触痛と高熱</b>'],
+ e:'部位（頬粘膜／軟口蓋・口蓋垂／歯肉全体）で一発鑑別できる。'},
+
+// §62 中枢神経障害の臨床兆候
+{p:6,s:'§62 中枢神経の臨床兆候',t:'recall',q:'髄膜刺激症状の3大徴候を、診察手技まで含めて述べよ。',
+ a:['<b>項部硬直</b>：頭部を前屈させようとすると抵抗を感じて曲がらない（重症例では板のようになる）','<b>ケールニッヒ（Kernig）徴候</b>：仰臥位で股関節と膝関節を<b>90度</b>に屈曲させた状態から、膝を<b>130度以上</b>伸展させようとすると、抵抗と激しい<b>大腿後部の痛み</b>が生じる','<b>ブルジンスキー（Brudzinski）徴候</b>：仰臥位の患者の頭部を<b>他動的に前屈</b>させると、股関節と膝関節が<b>反射的に不随意に屈曲</b>する'],
+ e:'角度（90度→130度以上）まで問われる。Kernigは「膝を伸ばす」、Brudzinskiは「頭を曲げると膝が曲がる」で区別。'},
+{p:6,s:'§62 中枢神経の臨床兆候',t:'recall',q:'脳波の「周期性同期性放電（PSD）」は、どの疾患で認めどの疾患で認めないか。',
+ a:['<b>孤発性CJD</b> … PSDを<b>認める</b>（特徴的所見）','<b>変異型CJD</b>（牛海綿状脳症から伝播）… PSDを<b>認めない</b> ← 最頻出のひっかけ','<b>SSPE（亜急性硬化性全脳炎）</b> … <b>高振幅のPSD（周期性高振幅徐波結合）</b>が極めて特徴的'],
+ e:'「CJD＝PSD」で丸暗記すると変異型で失点する。孤発性と変異型を必ず分けて覚える。'},
+{p:6,s:'§62 中枢神経の臨床兆候',t:'ox',q:'変異型クロイツフェルト・ヤコブ病では、脳波上PSD（周期性同期性放電）を認める。',a:false,
+ e:'×。<b>変異型CJDではPSDを認めない</b>。PSDを認めるのは<b>孤発性CJD</b>。'},
+{p:6,s:'§62 中枢神経の臨床兆候',t:'ox',q:'亜急性硬化性全脳炎（SSPE）では、脳波上、高振幅の周期性同期性放電を認める。',a:true,
+ e:'〇。周期性高振幅徐波結合が極めて特徴的。原因は変異型麻疹ウイルスの持続感染。'},
+
+// §63 ウイルス性出血熱
+{p:6,s:'§63 ウイルス性出血熱',t:'pick',q:'狭義のウイルス性出血熱（1類感染症・BSL4施設を要する4大出血熱）はどれか（すべて選べ）',
+ ok:['ラッサ熱','エボラ出血熱','マールブルグ病','クリミア・コンゴ出血熱'],
+ ng:['デング出血熱','腎症候性出血熱（HFRS）','SFTS','日本脳炎','インフルエンザ'],
+ e:'この4つが<b>1類感染症（全数報告）</b>で<b>BSL-4</b>施設を要する。デング出血熱とHFRSは<b>広義</b>の出血熱。'},
+{p:6,s:'§63 ウイルス性出血熱',t:'recall',q:'4大出血熱それぞれの科・媒介・分布・特記事項を答えよ。',
+ a:['<b>ラッサ熱</b>（アレナ）… <b>マストミス（野ネズミ）</b>媒介／<b>西アフリカに限局</b>するが出血熱の中で<b>患者数は最多（年間20〜30万人）</b>／<b>リバビリンが有効</b>','<b>エボラ出血熱</b>（フィロ）… コウモリ媒介／アフリカ<b>中央部</b>','<b>マールブルグ病</b>（フィロ）… コウモリ媒介／アフリカ<b>中央南部</b>','<b>クリミア・コンゴ出血熱</b>（ブニヤ目）… <b>ダニ</b>媒介／他と異なりアフリカだけでなく<b>中東・中央アジア・中国西部（北緯50度以南）まで広く分布</b>'],
+ e:'「患者数最多はエボラではなく<b>ラッサ</b>」「治療薬があるのは<b>ラッサ（リバビリン）</b>」「分布が広いのは<b>クリミア・コンゴ</b>」の3点が狙われる。'},
+{p:6,s:'§63 ウイルス性出血熱',t:'recall',q:'4大出血熱の致死率と発生数の序列を答えよ。',
+ a:['<b>ラッサ熱</b>… 致死率は<b>1〜2%と低い</b>。しかし発生数は<b>最多</b>（年20〜30万人）','<b>クリミア・コンゴ出血熱</b>… 致死率<b>15〜45%</b>。発生数は<b>ラッサに次いで多い</b>','分布は原則<b>アフリカのサハラ砂漠以南</b>。<b>クリミア・コンゴのみ例外</b>で、北緯50度以南のアフリカ〜中近東・中央アジア・中国西部に広がる'],
+ e:'「出血熱＝どれも致死率が極めて高い」は<b>誤り</b>。<b>ラッサは致死率が低いのに患者数は最多</b>という逆転が狙われる。'},
+{p:6,s:'§63 ウイルス性出血熱',t:'ox',q:'ラッサ熱は4大出血熱の中で致死率が最も高い。',a:false,
+ e:'×。ラッサ熱の致死率は<b>1〜2%</b>と低い。ただし<b>発生数は出血熱の中で最多</b>（西アフリカで年20〜30万人）。クリミア・コンゴは致死率15〜45%。'},
+{p:6,s:'§63 ウイルス性出血熱',t:'ox',q:'ウイルス性出血熱は空気感染するため、患者は陰圧個室で管理する。',a:false,
+ e:'×。<b>空気感染はしない</b>。<b>血液・体液を介して</b>院内感染・家族内感染を頻発させるため、標準予防策＋接触・飛沫予防策を徹底する。'},
+{p:6,s:'§63 ウイルス性出血熱',t:'ox',q:'クリミア・コンゴ出血熱はアフリカ大陸にのみ分布する。',a:false,
+ e:'×。他の出血熱と異なり<b>中東・中央アジア・中国西部（北緯50度以南）</b>まで広く分布するのが特徴。'},
+{p:6,s:'§63 ウイルス性出血熱',t:'recall',q:'広義の出血熱2つ（デング出血熱・腎症候性出血熱）を説明せよ。',
+ a:['<b>デング出血熱</b>（フラビ・蚊媒介）… <b>初感染ではデング熱（非致死性）で終わる</b>が、<b>異なる血清型に2度目以降の感染</b>をした際、<b>抗体依存性感染増強（ADE）</b>により重症の出血熱となる','<b>腎症候性出血熱（HFRS）</b>（ブニヤ目・<b>ハンタウイルス</b>／<b>四類感染症</b>）… <b>げっ歯類（ネズミ）</b>媒介の人獣共通感染症／ユーラシア大陸に分布／重症化すると<b>高度の蛋白尿・血尿と点状出血</b>／もう一つの病型が<b>ハンタウイルス肺症候群（HPS）</b>'],
+ e:'デングは「2回目が危ない」。ADEは非中和抗体がむしろ感染を増強してしまう現象で、§21（非中和抗体）と地続き。'},
+{p:6,s:'§63 ウイルス性出血熱',t:'ox',q:'デング熱は初感染時に最も重症化し、デング出血熱となる。',a:false,
+ e:'×。初感染は通常デング熱（非致死性）で終わる。<b>異なる血清型への2度目以降の感染</b>で<b>ADE</b>により重症化する。'},
+
+/* ---------------- 横断・ひっかけ手口 ---------------- */
+{p:7,s:'手口① 受容体・標的の逆転',t:'ox',q:'ヒトパピローマウイルスのE6がpRbを、E7がp53を不活化する。',a:false,
+ e:'×。<b>E6＝p53</b>、<b>E7＝pRb</b>。「6が先→53が先、7が後→Rbが後」の順でリンクさせて丸暗記する。'},
+{p:7,s:'手口① 受容体・標的の逆転',t:'ox',q:'麻疹ウイルスの受容体はアンジオテンシン変換酵素2（ACE2）である。',a:false,
+ e:'×。麻疹の受容体は<b>CD150（SLAM）</b>および<b>Nectin-4</b>。<b>ACE2はSARS-CoV-2およびSARS-CoV-1</b>の受容体。'},
+{p:7,s:'手口① 受容体・標的の逆転',t:'recall',q:'主要ウイルスの受容体を答えよ（麻疹／SARS-CoV／HIV／パルボB19）。',
+ a:['麻疹ウイルス … <b>CD150（SLAM）</b>、<b>Nectin-4</b>','SARS-CoV-1 / SARS-CoV-2 … <b>ACE2</b>','HIV … <b>CD4</b>（ウイルス側は<b>gp120</b>が結合）','ヒトパルボウイルスB19 … <b>P抗原</b>（赤芽球前駆細胞に発現）'],
+ e:'受容体の分布がそのままトロピズムを決める（§52）。パルボのP抗原→胎児水腫（§14）も同じ論理。'},
+{p:7,s:'手口② アルボの直接伝播の捏造',t:'recall',q:'アルボウイルスの「隔離」に関する公式を述べよ。',
+ a:['日本脳炎・デング・ジカ・SFTS・黄熱などは<b>すべて蚊やダニ（節足動物）が媒介</b>する','<b>ヒトからヒトへの直接的な飛沫・接触・空気感染は100%起きない</b>','よって<b>患者の隔離は医学的に完全に不要</b>である'],
+ e:'「発症した患者を直ちに空気感染予防策で個室隔離した(×)」が定型のひっかけ。臨床シナリオ問題で必ず出る。'},
+{p:7,s:'手口③ ライノの排泄経路の混同',t:'ox',q:'ライノウイルスはノンエンベロープであるため胃酸に強く、糞便中に大量に排出され糞口感染する。',a:false,
+ e:'×。ライノはノンエンベロープだが例外的に<b>酸に極めて弱い</b>。胃酸で死滅して腸管へ達しないため糞便中への排泄はほとんどなく、伝播は<b>上気道分泌物の飛沫・接触感染のみ</b>。'},
+
+/* ---------------- 記述コラム ---------------- */
+{p:8,s:'⓪ 感染サイクル5段階',t:'recall',q:'記述：ウイルスの感染サイクルを5段階に分けて説明せよ。',
+ a:['<b>(1) 吸着</b>：細胞表面の<b>受容体</b>に結合する','<b>(2) 侵入</b>：<b>エンベロープあり</b>＝エンベロープ蛋白と細胞膜が<b>融合</b>して侵入／<b>ノンエンベロープと一部のエンベロープウイルス</b>＝<b>エンドサイトーシス</b>を利用して侵入','<b>(3) 脱殻</b>：粒子を構成するタンパクが細胞内で分解を受け、<b>ゲノムが細胞質内に露出</b>する','<b>(4) 転写・タンパク合成・複製</b>：セントラルドグマに則ってウイルスタンパクとゲノムを合成する','<b>(5) 粒子形成・放出</b>：構造タンパクとゲノムが集合し、出芽または細胞崩壊により放出される'],
+ e:'HIVの6ステップ（コラム①）はこの5段階に<b>逆転写・核内移行・組み込み</b>が挟まった形。まず一般形を書けるようにしておく。'},
+
+
+{p:8,s:'① HIVの感染サイクル',t:'recall',q:'HIVの感染サイクルを、侵入から放出まで6ステップで述べよ。',
+ a:['1. <b>吸着・膜融合</b>：外皮糖タンパク（<b>gp120</b>）が<b>CD4受容体</b>に結合、エンベロープと細胞膜が融合してコアが侵入・脱殻','2. <b>逆転写</b>：一本鎖プラス鎖RNAを鋳型に<b>逆転写酵素</b>で線状二本鎖DNAを合成','3. <b>核内移行</b>：二本鎖DNAが核膜孔を通過して核内へ','4. <b>プロウイルス形成</b>：<b>インテグラーゼ</b>が両端の<b>LTR領域</b>を利用して宿主染色体DNAに組み込む','5. <b>転写・翻訳</b>：宿主RNAポリメラーゼでゲノムRNAを転写、宿主リボソームで Gag, Pol, Env を翻訳','6. <b>集合・出芽・放出</b>：細胞膜上で集合し、宿主細胞膜を被って<b>出芽（Budding）</b>し成熟粒子となる'],
+ e:'酵素名（逆転写酵素／インテグラーゼ）と受容体（CD4／gp120）は必ず明記。'},
+
+{p:8,s:'② ヘルペスの増殖 vs 潜伏',t:'recall',q:'ヘルペスウイルスの「増殖感染（リティックサイクル）」の遺伝子発現カスケードを述べよ。',
+ a:['0. ウイルス粒子中の<b>テグメントタンパク質</b>が核内へ移行し、最初の転写を促すトランスアクティベーターとして働く','1. <b>α遺伝子（Immediate-early遺伝子）</b>が発現','2. α遺伝子産物が<b>β遺伝子（Early遺伝子）</b>の発現を活性化 → ゲノム複製が開始','3. <b>γ遺伝子（Late遺伝子）</b>が発現 → カプシド・エンベロープなど構造タンパクが作られ、粒子形成・出芽・放出'],
+ e:'テグメント → α → β → γ の順。α＝超初期、β＝複製、γ＝構造タンパク。'},
+{p:8,s:'② ヘルペスの増殖 vs 潜伏',t:'recall',q:'ヘルペスウイルスの潜伏感染が維持される分子機構を述べよ。',
+ a:['潜伏中、ウイルスゲノムの転写はほぼ完全に停止するが、<b>LATs（潜伏感染関連トランスクリプト）</b>という非翻訳RNAのみが核内で発現する','LATsが宿主の<b>Dicer</b>により20〜23bpの<b>siRNA</b>へ切断され、<b>RISC複合体</b>に取り込まれる','この siRNA/RISC が、トランスアクティベーターである<b>α遺伝子mRNAと相補的に結合して分解・翻訳阻害</b>する（宿主TNF-α等のアポトーシス誘導因子の阻害も）','結果、β・γ遺伝子のドミノ的カスケード発現が抑制され、再活性化が防がれて安定した潜伏感染が維持される'],
+ e:'<b>LATs → Dicer → siRNA → RISC → α遺伝子mRNA分解</b>。この矢印を書ければ満点。'},
+
+{p:8,s:'③ プリオン',t:'recall',q:'正常型プリオン（PrP^C）と異常型（PrP^Sc）の対比を、5つの観点から述べよ。',
+ a:['<b>二次構造</b>：PrP^C＝<b>αヘリックス</b>が豊富 ／ PrP^Sc＝<b>βシート</b>が極めて豊富','<b>プロテアーゼ感受性</b>：PrP^C＝<b>感受性</b>（速やかに完全分解） ／ PrP^Sc＝<b>高度耐性</b>（酵素処理でも残存）','<b>脳内半減期</b>：PrP^C＝<b>3〜6時間</b>と極めて短い ／ PrP^Sc＝<b>極めて長い</b>（蓄積してアミロイド斑・海綿状変性）','<b>アミノ酸一次配列</b>：<b>完全に同一</b>（立体高次構造のみが異なる）','<b>121℃オートクレーブ20分</b>：PrP^C＝不活化される ／ PrP^Sc＝<b>完全な不活化は不可能</b>'],
+ e:'「一次配列は100%同一」が最頻出のひっかけポイント。'},
+{p:8,s:'③ プリオン',t:'ox',q:'正常型プリオンと異常型プリオンでは、アミノ酸配列が異なる。',a:false,
+ e:'×。<b>アミノ酸一次配列は100%同一</b>であり、<b>立体高次構造のみ</b>が異なる。'},
+{p:8,s:'③ プリオン',t:'ox',q:'プリオン病では、脳組織に炎症細胞の浸潤や脳炎の組織像を認める。',a:false,
+ e:'×。<b>炎症は一切認められず</b>、<b>アミロイド斑と海綿状変性（空胞化）</b>のみを認める。'},
+{p:8,s:'③ プリオン',t:'ox',q:'遺伝子コドン219の多型は、プリオン病の臨床分類に用いられている。',a:false,e:'×。用いられていない。'}
+];
+
+/* -------- 各節の出典（授業のコマ／過去問） -------- */
+const LECT = {
+ '01':'ウイルス学総論','02':'ヘルペスウイルス','03':'肝炎ウイルス','04':'主要な呼吸器ウイルス',
+ '05':'呼吸器・発疹性RNAウイルス','06':'神経系を含む多臓器指向性ウイルス','07':'皮膚・粘膜病変ウイルス',
+ '08':'昆虫媒介性RNAウイルス','09':'新興RNAウイルス','10':'消化管ウイルス・プリオン',
+ '11':'レトロウイルス・ウイルスベクター','12':'ウイルスの免疫、ワクチンの基礎と応用',
+ 'Q':'過去問（講義スライドに記載なし）'
+};
+const SECTION_SRC = {
+ "§1 一本鎖DNA":["01", "07", "11"],
+ "§2 二本鎖RNA":["01", "10"],
+ "§3 分節ゲノム":["01", "04", "09", "10"],
+ "§4 逆転写酵素":["01", "03", "11"],
+ "§5 ノンエンベロープ":["01", "03", "10"],
+ "§6 エンベロープあり":["01"],
+ "§7 細胞質複製DNAウイルス":["01", "07"],
+ "§8 核内複製RNAウイルス":["01", "04", "11"],
+ "§9 DNA/RNA 大分類":["01"],
+ "§10 微生物としてのウイルス":["01"],
+ "§11 子孫ウイルスの放出様式":["01"],
+ "§12 科レベルの共通点":["01", "02", "05", "11"],
+ "§13 空気感染":["01", "02", "05", "07"],
+ "§14 胎内感染（TORCH）":["02", "05", "07", "12"],
+ "§15 性感染症":["02", "03", "07"],
+ "§16 アルボウイルス":["08"],
+ "§17 人畜共通感染症":["03", "04", "06", "09"],
+ "§18 水平伝播の5経路":["01", "10"],
+ "§19 血液媒介と針刺し事故":["01", "03", "11", "Q"],
+ "§20 母子感染の3経路":["02", "05", "12", "Q"],
+ "§21 中和抗体 vs 保因証明":["03", "12"],
+ "§22 アスピリン禁忌":["04"],
+ "§23 口腔内粘膜病変":["02", "05", "06"],
+ "§24 二峰性発熱":["05"],
+ "§25 Avidity index":["Q"],
+ "§26 ペア血清":["06", "08"],
+ "§27 ウイルス分離が困難":["07", "10"],
+ "§28 CPEなし・免疫寛容":["01", "Q"],
+ "§29 ADE（抗体依存性感染増強）":["12"],
+ "§30 終生免疫の成立":["12", "Q"],
+ "§31 発がんウイルス":["01", "02", "03", "07", "11"],
+ "§32 T/NK細胞に感染":["02", "11"],
+ "§33 補体が効かない":["12"],
+ "§34 宿主染色体への組み込み":["03", "07", "11"],
+ "§35 HCVの間接発がん":["03"],
+ "§36 不顕性感染":["01", "05", "06"],
+ "§37 完全排除が不可能":["02", "03", "11", "Q"],
+ "§38 完治が可能な持続感染":["03"],
+ "§39 血清型が多い":["04", "06"],
+ "§40 持続感染の3様式":["01"],
+ "§41 初感染と再活性化":["02", "Q"],
+ "§42 弱毒生ワクチン":["05", "06", "12"],
+ "§43 不活化ワクチン":["06", "12"],
+ "§44 VAPP":["06"],
+ "§45 HPV男児接種":["07"],
+ "§46 発育鶏卵で製造":["12"],
+ "§47 根絶・撲滅":["06", "07"],
+ "§48 定期接種の変遷":["02", "03", "06", "10"],
+ "§49 抗ウイルス薬の有無":["02", "03", "04", "09", "11"],
+ "§50 ワクチンがないウイルス":["03", "Q"],
+ "§51 ウイルスベクターの分類":["11"],
+ "§52 中枢神経指向性":["05", "06", "09"],
+ "§53 呼吸器指向性":["04", "05", "06"],
+ "§54 消化器指向性":["10"],
+ "§55 肝臓指向性":["03"],
+ "§56 皮膚・粘膜・眼":["02", "04", "07"],
+ "§57 かぜ症候群":["04", "05", "06"],
+ "§58 ウイルス血症の有無":["01", "06", "07"],
+ "§59 増殖部位（免疫細胞・造血系）":["05", "07", "11"],
+ "§60 小児の発熱と発疹":["02", "05", "06", "07"],
+ "§61 口腔内病変の精密鑑別":["02", "05", "06"],
+ "§62 中枢神経の臨床兆候":["06", "Q"],
+ "§63 ウイルス性出血熱":["09"],
+ "手口① 受容体・標的の逆転":["05", "07", "11", "Q"],
+ "手口② アルボの直接伝播の捏造":["08"],
+ "手口③ ライノの排泄経路の混同":["06"],
+ "⓪ 感染サイクル5段階":["01", "Q"],
+ "① HIVの感染サイクル":["11"],
+ "② ヘルペスの増殖 vs 潜伏":["02", "Q"],
+ "③ プリオン":["06", "10"],
+};
+
+/* -------- pick問題のカテゴリ名（「〇〇なウイルス」形式の出題文を組み立てるのに使う） -------- */
+const PICK_LABEL = {
+ '一本鎖DNA（ssDNA）をゲノムに持つのはどれか（すべて選べ）':'一本鎖DNA（ssDNA）をゲノムに持つウイルス',
+ '二本鎖RNA（dsRNA）をゲノムに持つのはどれか（すべて選べ）':'二本鎖RNA（dsRNA）をゲノムに持つウイルス',
+ '分節ゲノムを持ち、遺伝子再集合（リアソートメント）を起こしうるのはどれか（すべて選べ）':'分節ゲノムを持ち、遺伝子再集合を起こしうるウイルス',
+ '複製サイクルの中で逆転写を行うのはどれか（すべて選べ）':'複製サイクルの中で逆転写を行うウイルス',
+ 'エンベロープを<u>もたない</u>のはどれか（すべて選べ）':'エンベロープを<u>もたない</u>ウイルス',
+ 'エンベロープを<u>もつ</u>のはどれか（すべて選べ）':'エンベロープを<u>もつ</u>ウイルス',
+ 'DNAウイルスでありながら細胞質で複製するのはどれか（すべて選べ）':'DNAウイルスでありながら細胞質で複製するウイルス',
+ 'RNAウイルスでありながら核内で複製・転写を行うのはどれか（すべて選べ）':'RNAウイルスでありながら核内で複製・転写を行うウイルス',
+ '空気感染（飛沫核感染）するのはどれか（すべて選べ）':'空気感染（飛沫核感染）するウイルス',
+ '経胎盤の胎内感染（垂直感染）を起こすのはどれか（すべて選べ）':'経胎盤の胎内感染（垂直感染）を起こすウイルス',
+ '性感染症（STD）の原因となる主要ウイルスはどれか（すべて選べ）':'性感染症（STD）の原因となる主要ウイルス',
+ '蚊（ヤブカ：ヒトスジシマカ・ネッタイシマカ）が媒介するのはどれか（すべて選べ）':'蚊（ヤブカ）が媒介するウイルス',
+ 'マダニが媒介するのはどれか（すべて選べ）':'マダニが媒介するウイルス',
+ '「中和抗体」として機能し、再感染防御やワクチン効果判定に使えるのはどれか（すべて選べ）':'「中和抗体」として機能する抗体',
+ '小児でアスピリン投与がライ症候群を誘発するため原則禁忌となるのはどれか（すべて選べ）':'小児でアスピリンが原則禁忌となるウイルス',
+ '二峰性発熱の経過をとるのはどれか（すべて選べ）':'二峰性発熱の経過をとるウイルス',
+ 'Avidity index が初感染と再活性化の鑑別に必須なのはどれか（すべて選べ）':'Avidity index が初感染と再活性化の鑑別に必須なウイルス',
+ '病変からのウイルス分離が不可能（困難）なのはどれか（すべて選べ）':'病変からのウイルス分離が不可能（困難）なウイルス',
+ 'CPE（細胞変性効果）を示さず、胎生期感染で免疫寛容を成立させるのはどれか（すべて選べ）':'CPEを示さず、胎生期感染で免疫寛容を成立させるウイルス',
+ '発がん性をもつ（腫瘍ウイルスとされる）のはどれか（すべて選べ）':'発がん性をもつ腫瘍ウイルス',
+ 'T細胞やNK細胞に感染して致死的な慢性経過（がん化・白血病）をたどりうるのはどれか（すべて選べ）':'T細胞・NK細胞に感染して致死的な慢性経過をたどりうるウイルス',
+ 'DNAが宿主染色体に組み込まれる（Integration）のはどれか（すべて選べ）':'DNAが宿主染色体に組み込まれる（Integration）ウイルス',
+ '不顕性感染が大部分を占める（感染してもほとんど症状が出ない）のはどれか（すべて選べ）':'不顕性感染が大部分を占めるウイルス',
+ '不顕性感染が極めて<u>少ない</u>（曝露されるとほぼ発症する）のはどれか（すべて選べ）':'不顕性感染が極めて<u>少ない</u>（曝露でほぼ発症する）ウイルス',
+ '体内から完全に排除することが不可能（潜伏・持続感染する）なのはどれか（すべて選べ）':'体内から完全に排除することが不可能なウイルス',
+ '薬物治療によって体内から完全排除・完治が可能な持続感染ウイルスはどれか（すべて選べ）':'薬物治療で完全排除・完治が可能な持続感染ウイルス',
+ '血清型（亜型）が極めて多く、生涯に何度も再感染するのはどれか（すべて選べ）':'血清型が極めて多く、生涯に何度も再感染するウイルス',
+ '弱毒生ワクチンで予防するのはどれか（すべて選べ）':'弱毒生ワクチンで予防する疾患',
+ '不活化ワクチンで予防するのはどれか（すべて選べ）':'不活化ワクチンで予防する疾患',
+ 'ワクチン株が体内で強毒化（リバート）してワクチン関連麻痺が問題となったのはどれか（すべて選べ）':'ワクチン株の強毒化（リバート）が問題となったワクチン',
+ 'ニワトリの発育有精卵（またはニワトリ胚培養細胞）を用いて製造されるワクチンはどれか（すべて選べ）':'発育鶏卵（ニワトリ胚）を用いて製造されるワクチン',
+ '人類が根絶に成功したヒトの感染症の病原体はどれか':'人類が根絶に成功したヒトの感染症の病原体',
+ '無菌性髄膜炎を惹起する主なウイルスはどれか（すべて選べ）':'無菌性髄膜炎を惹起する主なウイルス',
+ '脳炎・脳症を惹起するのはどれか（すべて選べ）':'脳炎・脳症を惹起するウイルス',
+ '遅発性（スロー）ウイルス感染症として脳病変を起こすのはどれか（すべて選べ）':'遅発性（スロー）ウイルス感染症として脳病変を起こすウイルス',
+ '小児のクループ（喉頭・気管・気管支の炎症）の主な原因はどれか（すべて選べ）':'小児のクループの主な原因ウイルス',
+ '乳幼児の細気管支炎・肺炎（下気道炎）の主原因はどれか（すべて選べ）':'乳幼児の細気管支炎・肺炎（下気道炎）の主原因ウイルス',
+ '重症肺炎・パンデミックを惹起する呼吸器ウイルスはどれか（すべて選べ）':'重症肺炎・パンデミックを惹起する呼吸器ウイルス',
+ '慢性化し、発がんリスクをもつ肝炎ウイルスはどれか（すべて選べ）':'慢性化し発がんリスクをもつ肝炎ウイルス',
+ '皮膚・粘膜に病変を形成するのはどれか（すべて選べ）':'皮膚・粘膜に病変を形成するウイルス',
+ '流行性角結膜炎（EKC）の主な原因はどれか（すべて選べ）':'流行性角結膜炎（EKC）の主な原因',
+ '小児の発疹性疾患のうち、空気感染対策（陰圧室・N95）が必要なのはどれか（すべて選べ）':'空気感染対策（陰圧室・N95）が必要な小児発疹性疾患',
+ 'DNAウイルスはどれか（すべて選べ）':'DNAウイルス',
+ 'かぜ症候群（上気道炎）の主要な原因ウイルスはどれか（すべて選べ）':'かぜ症候群（上気道炎）の主要な原因ウイルス',
+ 'ウイルス血症を<u>起こさない</u>のはどれか（すべて選べ）':'ウイルス血症を<u>起こさない</u>ウイルス',
+ '免疫細胞・造血系細胞そのものを増殖の場とするのはどれか（すべて選べ）':'免疫細胞・造血系細胞そのものを増殖の場とするウイルス',
+ '狭義のウイルス性出血熱（1類感染症・BSL4施設を要する4大出血熱）はどれか（すべて選べ）':'狭義のウイルス性出血熱（1類感染症・BSL4）',
+ '針刺し事故で感染しうる血液媒介ウイルスはどれか（すべて選べ）':'針刺し事故で感染しうる血液媒介ウイルス',
+ '遅発性（スロー）ウイルス感染症はどれか（すべて選べ）':'遅発性（スロー）ウイルス感染症',
+ '抗ウイルス薬が実用化されているのはどれか（すべて選べ）':'抗ウイルス薬が実用化されているウイルス',
+ '世界的にみてもワクチンが実用化されていないのはどれか（すべて選べ）':'世界的にみてワクチンが実用化されていないウイルス',
+ 'ADEが問題となったウイルスはどれか（すべて選べ）':'ADEが問題となったウイルス'
+};
+
+const VIRUS_SRC = {
+ "ヒトパルボウイルスB19":["07"],
+ "アデノ随伴ウイルス(AAV)":["11"],
+ "アデノウイルス":["04"],
+ "ヒトパピローマウイルス":["07"],
+ "JCウイルス":["06"],
+ "単純ヘルペス1型(HSV-1)":["02"],
+ "単純ヘルペス2型(HSV-2)":["02"],
+ "水痘・帯状疱疹(VZV)":["02"],
+ "EBウイルス":["02"],
+ "サイトメガロウイルス":["02"],
+ "HHV-6B / HHV-7":["02"],
+ "HHV-8 (KSHV)":["02"],
+ "天然痘ウイルス":["07"],
+ "エムポックスウイルス":["07"],
+ "伝染性軟属腫ウイルス":["07"],
+ "B型肝炎ウイルス":["03"],
+ "D型肝炎ウイルス":["03"],
+ "ロタウイルス":["10"],
+ "ノロウイルス":["10"],
+ "ポリオウイルス":["06"],
+ "ライノウイルス":["06"],
+ "コクサッキーA群":["06"],
+ "エコーウイルス":["06"],
+ "エンテロウイルス70/71":["06"],
+ "A型肝炎ウイルス":["03"],
+ "E型肝炎ウイルス":["03"],
+ "C型肝炎ウイルス":["03"],
+ "デングウイルス":["08", "12"],
+ "ウエストナイルウイルス":["08"],
+ "日本脳炎ウイルス":["08"],
+ "ジカウイルス":["08"],
+ "黄熱ウイルス":["08"],
+ "チクングニアウイルス":["08"],
+ "風疹ウイルス":["05"],
+ "コロナウイルス（SARS/MERS/COVID-19）":["04"],
+ "ヒトコロナウイルス（229E, OC43, NL63, HKU1）":["04"],
+ "インフルエンザA/B":["04"],
+ "麻疹ウイルス":["05"],
+ "ムンプスウイルス":["05"],
+ "ヒトパラインフルエンザ1,2型":["05"],
+ "ヒトパラインフルエンザ3型":["05"],
+ "ニパウイルス":["09"],
+ "RSウイルス":["05", "12"],
+ "ヒトメタニューモウイルス":["05"],
+ "狂犬病ウイルス":["06"],
+ "エボラウイルス":["09"],
+ "マールブルグウイルス":["09"],
+ "SFTSウイルス":["09"],
+ "クリミア・コンゴ出血熱ウイルス":["09"],
+ "ハンタウイルス":["09"],
+ "ラッサウイルス":["09"],
+ "LCMV":["Q"],
+ "HIV":["11"],
+ "HTLV-1":["11"],
+ "プリオン（参考）":["10"],
+};
+
+/* ---------------- 縦串マトリクス ---------------- */
+const MATRIX = [
+ ['ヒトパルボウイルスB19','パルボ','ssDNA','無','核','皮膚・造血','飛沫・経胎盤','受容体P抗原→赤芽球前駆細胞／胎児水腫／リンゴ病の発疹期は分離不可'],
+ ['アデノ随伴ウイルス(AAV)','パルボ','ssDNA','無','核','—','—','遺伝子治療ベクター。組み込まれにくい'],
+ ['アデノウイルス','アデノ','dsDNA','無','核','呼吸器・眼・腸管','飛沫・接触・糞口','A〜G群・1〜56型／B群3,7=プール熱／C群1,2,5,6=感冒／D群8,19,37=EKC／F群40,41=胃腸炎・腸重積／エタノール無効'],
+ ['ヒトパピローマウイルス','パピローマ','dsDNA','無','核','皮膚・粘膜（局所のみ）','性行為・接触','上皮基底細胞で局所増殖のみ→ウイルス血症を起こさない／E6→p53, E7→pRb／Integration／1,2,4=疣贅, 6,11=尖圭コンジローマ, 16,18=悪性'],
+ ['JCウイルス','ポリオーマ','dsDNA','無','核','中枢神経','—','免疫不全でPML（進行性多巣性白質脳症）／少突起膠細胞を破壊'],
+ ['単純ヘルペス1型(HSV-1)','ヘルペス','dsDNA','有','核','皮膚・粘膜・神経・眼','接触','三叉神経節に潜伏／歯肉口内炎／急性局所壊死性脳炎（アシクロビル）／樹枝状角膜炎'],
+ ['単純ヘルペス2型(HSV-2)','ヘルペス','dsDNA','有','核','皮膚・粘膜・神経','性行為・産道','仙髄神経節に潜伏／新生児ヘルペスは産道感染'],
+ ['水痘・帯状疱疹(VZV)','ヘルペス','dsDNA','有','核','皮膚・神経・眼','空気','空気感染／新旧の皮疹が混在・全痂皮化で感染力消失／無菌性髄膜炎／ARN／アスピリン禁忌／2014年10月〜定期接種'],
+ ['EBウイルス','ヘルペス','dsDNA','有','核','リンパ球(B)','唾液','B細胞不死化／バーキット・上咽頭がん／T・NK感染でCAEBV'],
+ ['サイトメガロウイルス','ヘルペス','dsDNA','有','核','全身','体液・経胎盤','Avidity indexで初感染鑑別／先天性CMV（小頭症・脳内石灰化）'],
+ ['HHV-6B / HHV-7','ヘルペス','dsDNA','有','核','リンパ球・皮膚','唾液','突発性発疹（生後6か月〜1歳・高熱3日→解熱と同時に発疹）／HHV-6Bが先, HHV-7が後'],
+ ['HHV-8 (KSHV)','ヘルペス','dsDNA','有','核','血管内皮','—','カポジ肉腫'],
+ ['天然痘ウイルス','ポックス','dsDNA','有','細胞質','皮膚・全身','空気','1980年WHO根絶宣言／人類が根絶した感染症2つのうちの1つ（他は牛疫・2011年）／自前のDNA依存性RNAポリメラーゼを持参し細胞質で複製'],
+ ['エムポックスウイルス','ポックス','dsDNA','有','細胞質','皮膚・全身','接触・飛沫','ポックス科＝細胞質複製の例外'],
+ ['伝染性軟属腫ウイルス','ポックス','dsDNA','有','細胞質','皮膚','接触','みずいぼ（小児の良性皮膚病変）／細胞質で複製'],
+ ['B型肝炎ウイルス','ヘパドナ','不完全dsDNA','有','核','肝','血液・性・母子','DNAなのに逆転写／cccDNA＝排除不能／Integrationで肝細胞がん／2016年10月〜0歳児に定期接種'],
+ ['D型肝炎ウイルス','デルタ','ssRNA','有','—','肝','血液','単独感染不可（HBVがヘルパー）／慢性化あり'],
+ ['ロタウイルス','レオ','dsRNA 11分節','無','細胞質','腸管','糞口','唯一のdsRNA／白色下痢症／分節→再集合／2020年10月〜定期接種（生ワクチン）'],
+ ['ノロウイルス','カリシ','(+)ssRNA','無','細胞質','腸管','糞口・塵埃','十二指腸・空腸上皮→絨毛萎縮／乾燥に強く塵埃感染／培養困難＝分離不可／次亜塩素酸Na'],
+ ['ポリオウイルス','ピコルナ','(+)ssRNA','無','細胞質','腸管→中枢神経','糞口','腸管が侵入門戸→一次増殖→ウイルス血症→中枢神経／2012年9月にOPV→IPVへ完全移行（VAPP回避）／野生株1型が残存'],
+ ['ライノウイルス','ピコルナ','(+)ssRNA','無','細胞質','上気道のみ','飛沫・接触','かぜの20〜30%・通常発熱なし／33℃でしか増殖しないため上気道炎のみ／酸に極めて弱く糞口感染しない／血清型100種以上／不顕性感染が少ない'],
+ ['コクサッキーA群','ピコルナ','(+)ssRNA','無','細胞質','腸管→粘膜・神経','糞口・飛沫','ヘルパンギーナ（軟口蓋・口蓋垂）／手足口病(A16,A10)／A24変異株=急性出血性結膜炎'],
+ ['エコーウイルス','ピコルナ','(+)ssRNA','無','細胞質','腸管→中枢神経','糞口','エンテロウイルス属。小児の無菌性髄膜炎の最多原因（2位がムンプス）'],
+ ['エンテロウイルス70/71','ピコルナ','(+)ssRNA','無','細胞質','中枢神経・眼','糞口・接触','EV70=急性出血性結膜炎／EV71=手足口病（重症例で脳炎）'],
+ ['A型肝炎ウイルス','ピコルナ','(+)ssRNA','無','細胞質','肝','糞口・MSM','慢性化なし／不活化ワクチン／抗HAV-IgGは中和抗体'],
+ ['E型肝炎ウイルス','ヘペ','(+)ssRNA','無','細胞質','肝','経口（生肉）','慢性化なし／3・4型が人畜共通（ブタ・シカ・イノシシ）／妊婦後期20%劇症化'],
+ ['C型肝炎ウイルス','フラビ','(+)ssRNA','有','細胞質','肝','血液','組み込みなし→慢性炎症で間接発がん／DAAで根治／抗体は非中和'],
+ ['デングウイルス','フラビ','(+)ssRNA','有','細胞質','全身','ヤブカ','アルボ→隔離不要／ペア血清／異なる血清型への再感染でADEによりデング出血熱（広義の出血熱）'],
+ ['ウエストナイルウイルス','フラビ','(+)ssRNA','有','細胞質','神経・全身','ヤブカ','アルボ→ヒト間感染なし＝隔離不要'],
+ ['日本脳炎ウイルス','フラビ','(+)ssRNA','有','細胞質','中枢神経','コガタアカイエカ','蚊媒介の脳炎／不活化ワクチンで激減／ヒト間感染なし＝隔離不要'],
+ ['ジカウイルス','フラビ','(+)ssRNA','有','細胞質','神経・胎児','ヤブカ・経胎盤','フラビ科（トガではない）／小頭症'],
+ ['黄熱ウイルス','フラビ','(+)ssRNA','有','細胞質','肝・全身','ヤブカ','弱毒生ワクチン'],
+ ['チクングニアウイルス','トガ','(+)ssRNA','有','細胞質','全身・関節','ヤブカ','トガ科（フラビではない）'],
+ ['風疹ウイルス','マトナ（旧トガ）','(+)ssRNA','有','細胞質','皮膚・全身・胎児','飛沫・経胎盤','飛沫感染（空気ではない）／3徴＝発熱・非融合性発疹・リンパ節腫脹／不顕性15〜30%／CRS'],
+ ['コロナウイルス（SARS/MERS/COVID-19）','コロナ','(+)ssRNA','有','細胞質','呼吸器','飛沫','重症肺炎・パンデミック／受容体ACE2（SARS-CoV-1/2）／SARS=キクガシラコウモリ, MERS=ヒトコブラクダ'],
+ ['ヒトコロナウイルス（229E, OC43, NL63, HKU1）','コロナ','(+)ssRNA','有','細胞質','上気道','飛沫','季節性の4株。かぜ症候群の約15%（冬季35%）'],
+ ['インフルエンザA/B','オルソミクソ','(-)ssRNA 8分節','有','核','呼吸器','飛沫','例外的に核内で複製・転写／抗原シフト／脳症（アスピリン禁忌）／発育鶏卵'],
+ ['麻疹ウイルス','パラミクソ','(-)ssRNA','有','細胞質','免疫細胞・呼吸器・神経','空気','受容体CD150(SLAM)→リンパ節・脾臓・胸腺の免疫細胞で爆発的増殖→一過性の免疫抑制→細菌性肺炎など二次感染／コプリック斑／二峰性発熱／SSPE'],
+ ['ムンプスウイルス','パラミクソ','(-)ssRNA','有','細胞質','唾液腺・神経','飛沫','飛沫感染／不顕性感染30%／合併症の無菌性髄膜炎は10%／ワクチンは90%有効・副反応の髄膜炎は2000人に1人／日本では今も任意接種'],
+ ['ヒトパラインフルエンザ1,2型','パラミクソ','(-)ssRNA','有','細胞質','上〜中気道','飛沫・接触','小児のクループ（喉頭・気管・気管支炎）'],
+ ['ヒトパラインフルエンザ3型','パラミクソ','(-)ssRNA','有','細胞質','下気道','飛沫・接触','病原性が高く細気管支炎・肺炎まで起こす'],
+ ['ニパウイルス','パラミクソ','(-)ssRNA','有','細胞質','中枢神経','オオコウモリ・ブタ','致死率40〜75%の急性脳炎'],
+ ['RSウイルス','ニューモ','(-)ssRNA','有','細胞質','下気道','飛沫・接触','乳幼児の肺炎の約50%（成人では優先度低）／細気管支炎'],
+ ['ヒトメタニューモウイルス','ニューモ','(-)ssRNA','有','細胞質','上〜下気道','飛沫・接触','1〜2歳に好発。上気道炎から下気道炎へ'],
+ ['狂犬病ウイルス','ラブド','(-)ssRNA','有','細胞質','中枢神経のみ','咬傷','咬傷部の筋肉で増殖→末梢神経を軸索内逆行性に移動→ウイルス血症を起こさない／100%発症・100%致死／不活化ワクチン'],
+ ['エボラウイルス','フィロ','(-)ssRNA','有','細胞質','全身','コウモリ・血液体液','狭義の出血熱／1類感染症・BSL4／アフリカ中央部'],
+ ['マールブルグウイルス','フィロ','(-)ssRNA','有','細胞質','全身','コウモリ・血液体液','狭義の出血熱／1類感染症・BSL4／アフリカ中央南部'],
+ ['SFTSウイルス','ブニヤ目','(-)ssRNA 3分節','有','細胞質','全身','マダニ','3分節／急性期はPCR・IgM（急死例ではペア血清不可）'],
+ ['クリミア・コンゴ出血熱ウイルス','ブニヤ目','(-)ssRNA 3分節','有','細胞質','全身','マダニ','狭義の出血熱／1類感染症・BSL4／致死率15〜45%／発生数はラッサに次ぐ／唯一アフリカ外にも分布（北緯50度以南〜中近東・中央アジア・中国西部）'],
+ ['ハンタウイルス','ブニヤ目','(-)ssRNA 3分節','有','細胞質','腎・肺','げっ歯類（ネズミ）','四類感染症／腎症候性出血熱(HFRS)＝広義の出血熱・蛋白尿・血尿・点状出血／もう一つの病型がハンタウイルス肺症候群(HPS)'],
+ ['ラッサウイルス','アレナ','ssRNA 2分節','有','細胞質','全身','マストミス・血液体液','狭義の出血熱／1類感染症・BSL4／西アフリカ／患者数は出血熱で最多（年20〜30万人）だが致死率は1〜2%と低い／発症6日以内のリバビリンが有効'],
+ ['LCMV','アレナ','ssRNA 2分節','有','細胞質','中枢神経','マウス','CPEなし／成獣はCTLで髄膜炎／胎生期感染は免疫寛容→生涯排出'],
+ ['HIV','レトロ','(+)ssRNA','有','核','CD4陽性T細胞・マクロファージ','血液・性・母子','免疫細胞そのものを増殖の場として破壊／受容体CD4（gp120が結合）／逆転写→インテグラーゼ→プロウイルス／抗体は非中和'],
+ ['HTLV-1','レトロ','(+)ssRNA','有','核','リンパ球(CD4T)','母乳・性・血液','ATL（20〜30年潜伏）／Tax・HBZ'],
+ ['プリオン（参考）','—','核酸なし','—','—','中枢神経','経口・医原性','PrP^Sc＝βシート／一次配列は正常型と同一／121℃20分でも不活化不能／孤発性CJDはPSD陽性・変異型は陰性']
+];
+
+/* -------- 選択肢の表記 → 縦串マトリクスの行（部分一致は誤爆するので明示的に対応づける） -------- */
+const VALIAS = {
+ 'ポックスウイルス':'天然痘ウイルス',
+ '単純ヘルペスウイルス':'単純ヘルペス1型(HSV-1)','単純ヘルペスウイルス1型':'単純ヘルペス1型(HSV-1)',
+ '口唇ヘルペス（HSV-1）':'単純ヘルペス1型(HSV-1)','単純ヘルペスウイルス2型':'単純ヘルペス2型(HSV-2)',
+ '水痘・帯状疱疹ウイルス':'水痘・帯状疱疹(VZV)','帯状疱疹（VZV）':'水痘・帯状疱疹(VZV)',
+ '水痘':'水痘・帯状疱疹(VZV)','水痘ワクチン':'水痘・帯状疱疹(VZV)',
+ 'HHV-6':'HHV-6B / HHV-7','HHV-7':'HHV-6B / HHV-7','突発性発疹':'HHV-6B / HHV-7','突発性発疹（HHV-6）':'HHV-6B / HHV-7',
+ 'HHV-8':'HHV-8 (KSHV)','HHV-8（KSHV）':'HHV-8 (KSHV)',
+ 'アデノ随伴ウイルス（AAV）':'アデノ随伴ウイルス(AAV)',
+ 'ヒトアデノウイルス':'アデノウイルス',
+ 'アデノウイルスB群3型':'アデノウイルス','アデノウイルスB群7型':'アデノウイルス',
+ 'アデノウイルスD群8型':'アデノウイルス','アデノウイルスD群19型':'アデノウイルス','アデノウイルスD群37型':'アデノウイルス',
+ 'アデノウイルスC群（1, 2, 5, 6型）':'アデノウイルス','アデノウイルスF群（40, 41型）':'アデノウイルス',
+ 'HPV':'ヒトパピローマウイルス','HPVワクチン':'ヒトパピローマウイルス',
+ '伝染性紅斑（リンゴ病）':'ヒトパルボウイルスB19',
+ 'エンテロウイルス属':'エコーウイルス','エンテロウイルス属（コクサッキー・エコー）':'エコーウイルス',
+ 'エンテロウイルスA71':'エンテロウイルス70/71','エンテロウイルス70型':'エンテロウイルス70/71',
+ 'コクサッキーウイルスA2':'コクサッキーA群','手足口病':'コクサッキーA群','手足口病（コクサッキー）':'コクサッキーA群',
+ 'ポリオウイルスPV1':'ポリオウイルス','ポリオ（IPV）':'ポリオウイルス','不活化ポリオ（IPV）':'ポリオウイルス',
+ '不活化ポリオワクチン':'ポリオウイルス','不活化ポリオワクチン（IPV）':'ポリオウイルス',
+ 'ポリオ経口弱毒生ワクチン（OPV / Sabin I, II, III株）':'ポリオウイルス',
+ 'ポリオ（OPV／経口）':'ポリオウイルス','ポリオ（IPV／注射）':'ポリオウイルス',
+ '麻疹':'麻疹ウイルス','抗麻疹抗体':'麻疹ウイルス','麻疹弱毒生ワクチン':'麻疹ウイルス',
+ 'MR（麻疹・風疹混合）':'麻疹ウイルス','変異型麻疹ウイルス（SSPE）':'麻疹ウイルス',
+ '風疹':'風疹ウイルス',
+ 'ムンプス':'ムンプスウイルス','おたふくかぜ（ムンプス）':'ムンプスウイルス',
+ 'インフルエンザ':'インフルエンザA/B',
+ 'インフルエンザ（フルミスト／経鼻）':'インフルエンザA/B',
+ 'インフルエンザ（注射・不活化）':'インフルエンザA/B','インフルエンザウイルス':'インフルエンザA/B',
+ 'インフルエンザAウイルス':'インフルエンザA/B','インフルエンザBウイルス':'インフルエンザA/B',
+ 'インフルエンザ不活化ワクチン':'インフルエンザA/B',
+ 'ヒトパラインフルエンザウイルス1型':'ヒトパラインフルエンザ1,2型','ヒトパラインフルエンザウイルス2型':'ヒトパラインフルエンザ1,2型',
+ 'ヒトパラインフルエンザウイルス3型':'ヒトパラインフルエンザ3型','ヒトパラインフルエンザウイルス':'ヒトパラインフルエンザ1,2型',
+ 'コロナウイルス':'コロナウイルス（SARS/MERS/COVID-19）','SARS-CoV-1':'コロナウイルス（SARS/MERS/COVID-19）',
+ 'SARS-CoV-2':'コロナウイルス（SARS/MERS/COVID-19）','MERS-CoV':'コロナウイルス（SARS/MERS/COVID-19）',
+ 'ヒトコロナウイルス（229E, OC43, NL63, HKU1）':'ヒトコロナウイルス（229E, OC43, NL63, HKU1）',
+ 'HIV-1':'HIV','抗HIV抗体':'HIV',
+ 'B型肝炎':'B型肝炎ウイルス','B型肝炎ワクチン':'B型肝炎ウイルス','抗HBs抗体':'B型肝炎ウイルス',
+ 'A型肝炎':'A型肝炎ウイルス','抗HAV-IgG抗体':'A型肝炎ウイルス',
+ '抗HCV抗体':'C型肝炎ウイルス',
+ '日本脳炎':'日本脳炎ウイルス','日本脳炎ワクチン':'日本脳炎ウイルス',
+ '黄熱':'黄熱ウイルス','狂犬病':'狂犬病ウイルス',
+ 'ロタウイルス（成人）':'ロタウイルス','ロタウイルスワクチン':'ロタウイルス',
+ 'SFTSウイルス（ダビエバンダウイルス）':'SFTSウイルス',
+ 'LCMV（リンパ球性脈絡髄膜炎ウイルス）':'LCMV','JCウイルス（PML）':'JCウイルス',
+ '腎症候性出血熱（HFRS）':'ハンタウイルス','デング出血熱':'デングウイルス',
+ 'ラッサ熱':'ラッサウイルス','エボラ出血熱':'エボラウイルス','マールブルグ病':'マールブルグウイルス',
+ 'クリミア・コンゴ出血熱':'クリミア・コンゴ出血熱ウイルス','SFTS':'SFTSウイルス',
+ 'SSPE（亜急性硬化性全脳炎）':'麻疹ウイルス','PML（進行性多巣性白質脳症）':'JCウイルス',
+ 'AIDS':'HIV','ATL':'HTLV-1','ヘルパンギーナ':'コクサッキーA群','A型肝炎':'A型肝炎ウイルス','ポリオ':'ポリオウイルス'
+};
+let VNAME = null;
+function virusRow(t) {
+  if (!VNAME) { VNAME = {}; MATRIX.forEach((r, i) => { VNAME[r[0]] = i; }); }
+  if (VNAME[t] !== undefined) return VNAME[t];
+  const a = VALIAS[t];
+  return (a !== undefined && VNAME[a] !== undefined) ? VNAME[a] : -1;
+}
+
+/* =========================================================================
+   ENGINE
+   ========================================================================= */
+const KEY = 'virusdrill.v1';
+const BOX_MS = [0, 0, 20*60e3, 24*3600e3, 3*24*3600e3, 7*24*3600e3];
+const MAX_BOX = 5;
+
+ITEMS.forEach((it, i) => { it.id = 'i' + i; });
+
+let store = load();
+function load() {
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.r) return s; } catch (e) {}
+  return { r: {}, filter: null, streakDay: null };
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }
+function rec(id) { return store.r[id] || (store.r[id] = { b: 0, d: 0, w: 0, n: 0 }); }
+
+const $ = s => document.querySelector(s);
+const now = () => Date.now();
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const sample = (a, n) => shuffle(a).slice(0, n);
+
+function pool(mode) {
+  if (mode && mode.indexOf('sec:') === 0) return SECTIONS[+mode.slice(4)].items;
+  let p = ITEMS;
+  if (store.filter !== null && store.filter !== undefined) p = p.filter(i => i.p === store.filter);
+  if (mode === 'ox' || mode === 'pick' || mode === 'recall') p = p.filter(i => i.t === mode);
+  if (mode === 'miss') p = p.filter(i => (store.r[i.id] || {}).w > 0 && (store.r[i.id] || {}).b <= 2);
+  return p;
+}
+function due(items) { const t = now(); return items.filter(i => { const r = store.r[i.id]; return !r || r.d <= t; }); }
+
+function buildQueue(mode, n) {
+  const cand = due(pool(mode));
+  const tier = i => { const r = store.r[i.id]; if (!r) return 1; if (r.w > 0 && r.b <= 2) return 0; return 1 + r.b; };
+  return shuffle(cand).sort((a, b) => tier(a) - tier(b)).slice(0, n);
+}
+
+/* ---------- home render ---------- */
+function renderHome() {
+  const all = store.filter === null || store.filter === undefined ? ITEMS : ITEMS.filter(i => i.p === store.filter);
+  let nNew = 0, nLrn = 0, nOk = 0;
+  all.forEach(i => { const r = store.r[i.id]; if (!r || r.b === 0) nNew++; else if (r.b >= 4) nOk++; else nLrn++; });
+  const tot = all.length || 1;
+  const bar = $('#bar').children;
+  bar[0].style.width = (nOk / tot * 100) + '%';
+  bar[1].style.width = (nLrn / tot * 100) + '%';
+  bar[2].style.width = (nNew / tot * 100) + '%';
+  $('#lgOk').textContent = '定着 ' + nOk;
+  $('#lgLrn').textContent = '学習中 ' + nLrn;
+  $('#lgNew').textContent = '未習 ' + nNew;
+
+  const d = due(all).length;
+  $('#dueCount').innerHTML = d + '<small>問</small>';
+  $('#start').disabled = d === 0;
+  const n = Math.min(10, d);
+  $('#startSub').textContent = d === 0 ? 'いまは復習待ちです。少し時間をおいて。' : n + '問 ／ 約' + Math.max(1, Math.round(n * 0.22)) + '分';
+
+  const miss = ITEMS.filter(i => (store.r[i.id] || {}).w > 0 && (store.r[i.id] || {}).b <= 2).length;
+  $('#missSub').textContent = miss + '問';
+  $('#tileMiss').disabled = miss === 0;
+
+  document.querySelectorAll('.tile[data-mode]').forEach(b => {
+    const m = b.dataset.mode;
+    if (m === 'miss') return;
+    b.disabled = due(pool(m)).length === 0;
+  });
+
+  let secOk = 0;
+  SECTIONS.forEach(s => { if (secStats(s).ok === s.items.length) secOk++; });
+  $('#studySub').textContent = SECTIONS.length + '節 ／ 読了 ' + secOk;
+  $('#matrixSub').textContent = MATRIX.length + 'ウイルス';
+
+  const pp = $('#partProgress');
+  pp.innerHTML = '';
+  PARTS.forEach((name, pi) => {
+    const its = ITEMS.filter(i => i.p === pi);
+    let ok = 0, lrn = 0;
+    its.forEach(i => { const r = store.r[i.id]; if (r && r.b >= 4) ok++; else if (r && r.b > 0) lrn++; });
+    const row = document.createElement('div');
+    row.className = 'prow';
+    row.innerHTML = '<div class="nm">' + name + '</div>' +
+      '<div class="mini"><i class="b-ok" style="background:var(--green);width:' + (ok / its.length * 100) + '%"></i>' +
+      '<i class="b-lrn" style="background:var(--amber);width:' + (lrn / its.length * 100) + '%"></i></div>' +
+      '<div class="pct">' + Math.round(ok / its.length * 100) + '%</div>';
+    pp.appendChild(row);
+  });
+
+  $('#footnote').innerHTML = '全 <b>' + ITEMS.length + '問</b>（〇× ' + ITEMS.filter(i => i.t === 'ox').length +
+    '／選別 ' + ITEMS.filter(i => i.t === 'pick').length + '／想起 ' + ITEMS.filter(i => i.t === 'recall').length +
+    '）。出典：特徴別ウイルス分類 全36節＋記述コラム／臓器指向性・臨床兆候・ひっかけ手口 全11節。';
+}
+
+function renderChips() {
+  const c = $('#partChips');
+  c.innerHTML = '';
+  const mk = (label, val) => {
+    const b = document.createElement('button');
+    b.className = 'chip'; b.textContent = label;
+    b.setAttribute('aria-pressed', String(store.filter === val));
+    b.onclick = () => { store.filter = val; save(); renderChips(); renderHome(); };
+    c.appendChild(b);
+  };
+  mk('すべて', null);
+  PARTS.forEach((p, i) => mk(PARTS_SHORT[i], i));
+}
+
+/* ---------- quiz ---------- */
+let Q = { queue: [], idx: 0, results: [], mode: null, sel: new Set(), answered: false, opts: null, variant: null };
+
+const JP_N = ['', '1つ', '2つ', '3つ', '4つ'];
+
+/* pick問題から出題形式をランダムに1つ選ぶ。
+   k='c' …「〈カテゴリ〉として正しいものをn個選べ」（正解n個＋誤りで5択前後）
+   k='w' …「〈カテゴリ〉として誤っているものをn個選べ」（誤りn個＋正しいもので5択前後）
+   k='a' …「該当するものをすべて選べ」（従来形式・個数は伏せる）            */
+function buildVariant(it) {
+  const L = PICK_LABEL[it.q];
+  const nOk = it.ok.length, nNg = it.ng.length, V = [];
+  if (L) {
+    if (nNg >= 2) for (let n = 1; n <= Math.min(3, nOk); n++) V.push({ k: 'c', n: n });
+    if (nOk >= 3) for (let n = 1; n <= Math.min(2, nNg); n++) V.push({ k: 'w', n: n });
+  }
+  V.push({ k: 'a', n: 0 });
+  const v = V[Math.floor(Math.random() * V.length)];
+
+  let sel, other;
+  if (v.k === 'c') {
+    const T = Math.min(5, v.n + nNg);
+    sel = sample(it.ok, v.n); other = sample(it.ng, T - v.n);
+    v.prompt = L + 'として<b>正しいもの</b>を' + JP_N[v.n] + '選べ';
+    v.tag = '正しいものを' + JP_N[v.n];
+  } else if (v.k === 'w') {
+    const T = Math.min(5, v.n + nOk);
+    sel = sample(it.ng, v.n); other = sample(it.ok, T - v.n);
+    v.prompt = L + 'として<b>誤っているもの</b>を' + JP_N[v.n] + '選べ';
+    v.tag = '誤りを' + JP_N[v.n];
+  } else {
+    const n = 1 + Math.floor(Math.random() * Math.min(3, nOk));
+    sel = sample(it.ok, n);
+    other = sample(it.ng, Math.min(nNg, Math.max(2, 6 - n)));
+    v.n = 0;
+    v.prompt = it.q;
+    v.tag = 'すべて選ぶ';
+  }
+  v.opts = shuffle(sel.map(t => ({ t: t, c: true })).concat(other.map(t => ({ t: t, c: false }))));
+  return v;
+}
+
+function updateSubmit() {
+  const v = Q.variant, s = $('#submitBtn');
+  if (!s || !v) return;
+  if (v.k === 'a') { s.disabled = Q.sel.size === 0; return; }
+  s.disabled = Q.sel.size !== v.n;
+  const cnt = $('#selCount');
+  if (cnt) cnt.innerHTML = '選択中 <b>' + Q.sel.size + '</b> / ' + v.n + '個';
+}
+
+function startSession(mode, n) {
+  // 節から出題するときは復習期日を無視して全問回す
+  const q = (mode && mode.indexOf('sec:') === 0)
+    ? shuffle(pool(mode)).slice(0, n || 10)
+    : buildQueue(mode, n || 10);
+  if (!q.length) return;
+  paused = null;
+  Q = { queue: q, idx: 0, results: [], mode: mode, sel: new Set(), answered: false, opts: null, variant: null };
+  quizOrigin = (mode && mode.indexOf('sec:') === 0) ? 'section' : 'home';
+  show('quiz');
+  $('#htitle').textContent = (mode && mode.indexOf('sec:') === 0)
+    ? SECTIONS[+mode.slice(4)].s
+    : (({ ox: '〇× 瞬発', pick: 'ウイルス選択', recall: 'キーワード想起', miss: 'ミス箱', all: '演習' })[mode] || '演習');
+  renderQ();
+}
+
+function renderQ() {
+  const it = Q.queue[Q.idx];
+  Q.answered = false; Q.sel = new Set();
+  $('#afterArea').innerHTML = '';
+
+  const dots = $('#dots');
+  dots.innerHTML = '';
+  Q.queue.forEach((_, i) => {
+    const d = document.createElement('i');
+    if (i < Q.results.length) d.className = Q.results[i] ? 'ok' : 'ng';
+    else if (i === Q.idx) d.className = 'cur';
+    dots.appendChild(d);
+  });
+  $('#qmeta').textContent = (Q.idx + 1) + ' / ' + Q.queue.length;
+
+  Q.variant = it.t === 'pick' ? buildVariant(it) : null;
+  const tag = it.t === 'pick' ? Q.variant.tag : ({ ox: '〇×', recall: '想起' })[it.t];
+  const text = it.t === 'pick' ? Q.variant.prompt : it.q;
+  const c = $('#qcard');
+  c.innerHTML = '<span class="qtag">' + tag + '</span><div class="qsrc">' + PARTS[it.p] + '　' + it.s +
+    srcBadges(it.s) + '</div>' +
+    '<div class="qtext' + (text.length > 46 ? ' sm' : '') + '">' + text + '</div>';
+
+  if (it.t === 'ox') {
+    const row = document.createElement('div');
+    row.className = 'oxrow';
+    row.innerHTML = '<button class="oxbtn o">〇</button><button class="oxbtn x">×</button>';
+    row.children[0].onclick = () => answerOX(true);
+    row.children[1].onclick = () => answerOX(false);
+    c.appendChild(row);
+  } else if (it.t === 'pick') {
+    const v = Q.variant;
+    Q.opts = v.opts;
+    const box = document.createElement('div');
+    box.className = 'opts';
+    Q.opts.forEach((o, i) => {
+      const b = document.createElement('button');
+      b.className = 'opt'; b.setAttribute('aria-pressed', 'false');
+      b.innerHTML = '<span class="box"></span><span>' + o.t + '</span>';
+      b.onclick = () => {
+        if (Q.answered) return;
+        const on = b.getAttribute('aria-pressed') === 'true';
+        b.setAttribute('aria-pressed', String(!on));
+        if (on) Q.sel.delete(i); else Q.sel.add(i);
+        updateSubmit();
+      };
+      box.appendChild(b);
+    });
+    c.appendChild(box);
+    if (v.k !== 'a') {
+      const cnt = document.createElement('div');
+      cnt.className = 'selcount'; cnt.id = 'selCount';
+      c.appendChild(cnt);
+    }
+    const s = document.createElement('button');
+    s.className = 'act'; s.id = 'submitBtn'; s.textContent = '決定'; s.disabled = true;
+    s.onclick = answerPick;
+    c.appendChild(s);
+    updateSubmit();
+  } else {
+    const s = document.createElement('button');
+    s.className = 'act ghost'; s.textContent = '答えを見る';
+    s.onclick = () => {
+      s.remove();
+      const a = document.createElement('div');
+      a.className = 'recall-a';
+      a.innerHTML = '<ul>' + it.a.map(x => '<li>' + x + '</li>').join('') + '</ul>';
+      c.appendChild(a);
+      if (it.e) { const e = document.createElement('div'); e.className = 'expl'; e.innerHTML = '<span class="lbl">POINT</span>' + it.e; c.appendChild(e); }
+      const row = document.createElement('div');
+      row.className = 'selfrow';
+      row.innerHTML = '<button class="no">言えなかった</button><button class="yes">言えた</button>';
+      row.children[0].onclick = () => grade(false, true);
+      row.children[1].onclick = () => grade(true, true);
+      c.appendChild(row);
+    };
+    c.appendChild(s);
+  }
+  window.scrollTo(0, 0);
+}
+
+function answerOX(v) {
+  if (Q.answered) return;
+  const it = Q.queue[Q.idx];
+  const ok = (v === it.a);
+  document.querySelectorAll('.oxbtn').forEach(b => b.disabled = true);
+  grade(ok, false, it.a ? '正解は 〇' : '正解は ×');
+}
+
+function answerPick() {
+  if (Q.answered) return;
+  const v = Q.variant;
+  // 「誤っているものを選べ」形式では、選ぶべき肢＝カテゴリに当てはまらないもの
+  const W = v.k === 'w';
+  const M = W ? { hit: '誤り', miss: '見落とし', over: 'これは正しい' }
+              : { hit: '正',   miss: '落とし',   over: '誤選択' };
+  let ok = true;
+  document.querySelectorAll('.opt').forEach((b, i) => {
+    const o = Q.opts[i], picked = Q.sel.has(i);
+    b.disabled = true;
+    if (o.c && picked) { b.classList.add('res-hit'); b.insertAdjacentHTML('beforeend', '<span class="mark">' + M.hit + '</span>'); }
+    else if (o.c && !picked) { b.classList.add('res-miss'); b.insertAdjacentHTML('beforeend', '<span class="mark">' + M.miss + '</span>'); ok = false; }
+    else if (!o.c && picked) { b.classList.add('res-over'); b.insertAdjacentHTML('beforeend', '<span class="mark">' + M.over + '</span>'); ok = false; }
+  });
+  const s = $('#submitBtn'); if (s) s.remove();
+  const cnt = $('#selCount'); if (cnt) cnt.remove();
+  const list = Q.opts.filter(o => o.c).map(o => o.t).join('、');
+  grade(ok, false, (W ? '誤りは：' : '該当：') + list);
+}
+
+function grade(ok, isSelf, sub) {
+  if (Q.answered) return;
+  Q.answered = true;
+  const it = Q.queue[Q.idx];
+  const r = rec(it.id);
+  r.n++;
+  if (ok) { r.b = Math.min(MAX_BOX, Math.max(1, r.b) + 1); }
+  else { r.b = 1; r.w++; }
+  r.d = now() + BOX_MS[r.b];
+  save();
+  Q.results.push(ok);
+
+  const dots = $('#dots').children;
+  if (dots[Q.idx]) dots[Q.idx].className = ok ? 'ok' : 'ng';
+
+  const after = $('#afterArea');
+  after.innerHTML = '';
+  if (!isSelf) {
+    const v = document.createElement('div');
+    v.className = 'verdict ' + (ok ? 'ok' : 'ng');
+    v.innerHTML = '<span class="vl">' + (ok ? '正解' : '不正解') + '</span>' + (sub ? '<small>' + sub + '</small>' : '');
+    after.appendChild(v);
+    if (it.e) { const e = document.createElement('div'); e.className = 'expl'; e.innerHTML = '<span class="lbl">解説</span>' + it.e; after.appendChild(e); }
+  }
+
+  // 選択問題では、出た選択肢をそのまま縦串マトリクスで引けるようにする
+  if (it.t === 'pick' && Q.opts) {
+    const known = Q.opts.map(o => o.t).filter(t => virusRow(t) >= 0);
+    if (known.length) {
+      const pr = document.createElement('div');
+      pr.className = 'peekrow';
+      pr.innerHTML = '<span class="lbl">縦串マトリクスで見る</span><div class="chips"></div>';
+      const box = pr.querySelector('.chips');
+      known.forEach(t => box.appendChild(virusChip(t)));
+      after.appendChild(pr);
+    }
+  }
+
+  const si = sectionIndexOf(it);
+  if (si >= 0) {
+    const sl = document.createElement('button');
+    sl.className = 'studylink';
+    sl.innerHTML = '📖 教材で <b>' + SECTIONS[si].s + '</b> を読む　→';
+    sl.onclick = () => pauseToSection(si);
+    after.appendChild(sl);
+  }
+
+  const nx = document.createElement('button');
+  nx.className = 'act';
+  nx.textContent = (Q.idx + 1 < Q.queue.length) ? '次へ' : '結果を見る';
+  nx.onclick = next;
+  after.appendChild(nx);
+  if (!isSelf) after.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function next() {
+  Q.idx++;
+  if (Q.idx >= Q.queue.length) return finish();
+  renderQ();
+}
+
+function finish() {
+  const ok = Q.results.filter(Boolean).length, n = Q.results.length;
+  $('#qcard').innerHTML = '';
+  $('#dots').innerHTML = '';
+  $('#qmeta').textContent = '';
+  const a = $('#afterArea');
+  a.innerHTML = '';
+  const d = document.createElement('div');
+  d.className = 'card done';
+  d.innerHTML = '<div class="big">' + ok + '<small> / ' + n + '</small></div><p>' +
+    (ok === n ? '全問正解。次のセットへ。' : '間違えた ' + (n - ok) + ' 問はミス箱に入りました。') + '</p>';
+  a.appendChild(d);
+
+  const isSec = Q.mode && Q.mode.indexOf('sec:') === 0;
+  const backLabel = isSec ? '教材にもどる' : 'ホームへ';
+  const backTo = () => show(isSec ? 'section' : 'home');
+  const more = isSec ? 0 : buildQueue(Q.mode, 10).length;
+  const b1 = document.createElement('button');
+  b1.className = 'act'; b1.textContent = more ? 'もう10問' : backLabel;
+  b1.onclick = () => more ? startSession(Q.mode, 10) : backTo();
+  a.appendChild(b1);
+  if (more) {
+    const b2 = document.createElement('button');
+    b2.className = 'act ghost'; b2.textContent = backLabel;
+    b2.onclick = backTo;
+    a.appendChild(b2);
+  } else if (isSec) {
+    const b2 = document.createElement('button');
+    b2.className = 'act ghost'; b2.textContent = 'もう一度この節を解く';
+    b2.onclick = () => startSession(Q.mode, SECTIONS[+Q.mode.slice(4)].items.length);
+    a.appendChild(b2);
+  }
+  window.scrollTo(0, 0);
+}
+
+/* ---------- study (教材) ---------- */
+const SECTIONS = [];
+ITEMS.forEach(it => {
+  let s = SECTIONS.find(x => x.p === it.p && x.s === it.s);
+  if (!s) { s = { p: it.p, s: it.s, items: [] }; SECTIONS.push(s); }
+  s.items.push(it);
+});
+let curSection = 0;
+
+function sectionIndexOf(it) {
+  return SECTIONS.findIndex(s => s.p === it.p && s.s === it.s);
+}
+
+/* 解説から教材へ寄り道する間、解答済みの画面をそのまま保持しておく */
+let paused = null;
+function pauseToSection(si) {
+  paused = {
+    qcard: $('#qcard').innerHTML,
+    after: $('#afterArea').innerHTML,
+    dots: $('#dots').innerHTML,
+    meta: $('#qmeta').textContent,
+    title: $('#htitle').textContent,
+    origin: quizOrigin,
+    label: (Q.idx + 1) + ' / ' + Q.queue.length + '問目'
+  };
+  curSection = si;
+  show('section');
+}
+function resumeQuiz() {
+  if (!paused) return;
+  const p = paused;
+  show('quiz');
+  $('#qcard').innerHTML = p.qcard;
+  $('#afterArea').innerHTML = p.after;
+  $('#dots').innerHTML = p.dots;
+  $('#qmeta').textContent = p.meta;
+  $('#htitle').textContent = p.title;
+  quizOrigin = p.origin;
+  // 復元したDOMはハンドラを失っているので付け直す（他の肢は解答済みで不活性のまま）
+  const btns = $('#afterArea').querySelectorAll('button');
+  btns.forEach(b => {
+    if (b.classList.contains('studylink')) b.onclick = () => pauseToSection(sectionIndexOf(Q.queue[Q.idx]));
+    else if (b.classList.contains('vchip')) { if (!b.disabled) b.onclick = () => openVirus(b.textContent); }
+    else if (b.classList.contains('act')) b.onclick = next;
+  });
+  paused = null;
+}
+function resumeBar() {
+  if (!paused) return null;
+  const b = document.createElement('button');
+  b.className = 'resumebar';
+  b.innerHTML = '← クイズにもどる<span>' + paused.title + '　' + paused.label + '</span>';
+  b.onclick = resumeQuiz;
+  return b;
+}
+
+/* 出典バッジ（授業コマ番号 / Q＝過去問のみ） */
+function srcCodes(label) { return SECTION_SRC[label] || []; }
+function srcBadges(label) {
+  return srcCodes(label).map(c =>
+    '<span class="srcb' + (c === 'Q' ? ' q' : '') + '" title="' + (c === 'Q' ? LECT.Q : '第' + (+c) + '回 ' + LECT[c]) + '">' +
+    (c === 'Q' ? '過去問' : (+c)) + '</span>').join('');
+}
+function badgesFor(codes) {
+  return (codes || []).map(c =>
+    '<span class="srcb' + (c === 'Q' ? ' q' : '') + '" title="' + (c === 'Q' ? LECT.Q : '第' + (+c) + '回 ' + LECT[c]) + '">' +
+    (c === 'Q' ? '過去問' : (+c)) + '</span>').join('');
+}
+function lineFor(codes) {
+  if (!codes || !codes.length) return '';
+  return codes.map(c => c === 'Q' ? '<b>過去問</b>のみ（講義スライドに記載なし）'
+                                  : '<b>第' + (+c) + '回</b> ' + LECT[c]).join('　／　');
+}
+function srcLine(label) {
+  const cs = srcCodes(label);
+  if (!cs.length) return '';
+  return cs.map(c => c === 'Q' ? '<b>過去問</b>のみ（講義スライドに記載なし）'
+                               : '<b>第' + (+c) + '回</b> ' + LECT[c]).join('　／　');
+}
+
+function secStats(sec) {
+  let ok = 0;
+  sec.items.forEach(i => { const r = store.r[i.id]; if (r && r.b >= 4) ok++; });
+  return { ok: ok, n: sec.items.length };
+}
+
+function renderStudy() {
+  const q = $('#ssearch').value.trim().toLowerCase();
+  const wrap = $('#slist');
+  wrap.innerHTML = '';
+  const rb = resumeBar(); if (rb) wrap.appendChild(rb);
+  let lastPart = -1, group = null, shown = 0;
+
+  SECTIONS.forEach((sec, si) => {
+    const hay = (sec.s + ' ' + PARTS[sec.p] + ' ' +
+      sec.items.map(i => i.q + (i.e || '') +
+        (Array.isArray(i.a) ? i.a.join('') : '') + (i.ok ? i.ok.join('') : '')).join(' ')).toLowerCase();
+    if (q && !hay.includes(q)) return;
+    shown++;
+    if (sec.p !== lastPart) {
+      lastPart = sec.p;
+      group = document.createElement('div');
+      group.className = 'sgroup';
+      group.innerHTML = '<h3>' + PARTS[sec.p] + '</h3>';
+      wrap.appendChild(group);
+    }
+    const st = secStats(sec);
+    const b = document.createElement('button');
+    b.className = 'srow';
+    b.innerHTML = '<span class="sn">' + sec.s + '</span>' +
+      '<span class="srcs">' + srcBadges(sec.s) + '</span>' +
+      '<span class="sbar"><i style="width:' + (st.ok / st.n * 100) + '%"></i></span>' +
+      '<span class="sc">' + st.ok + '/' + st.n + '</span>';
+    b.onclick = () => { curSection = si; show('section'); };
+    group.appendChild(b);
+  });
+
+  if (!shown) wrap.insertAdjacentHTML('beforeend', '<div class="mempty">該当なし</div>');
+}
+
+function renderSection() {
+  const sec = SECTIONS[curSection];
+  $('#htitle').textContent = sec.s;
+  const body = $('#sbody');
+  const picks = sec.items.filter(i => i.t === 'pick');
+  const recalls = sec.items.filter(i => i.t === 'recall');
+  const oxs = sec.items.filter(i => i.t === 'ox');
+  let h = '<div class="sec-h">' + sec.s + '</div><p class="sec-p">' + PARTS[sec.p] + '</p>' +
+    (srcLine(sec.s) ? '<div class="sec-src"><span class="lbl">出典</span>' + srcLine(sec.s) + '</div>' : '');
+
+  if (picks.length) {
+    h += '<div class="blk"><h4>該当するもの</h4>';
+    picks.forEach(p => {
+      h += '<div class="vgroup"><div class="vl">' + (PICK_LABEL[p.q] || p.q) + '</div>' +
+           '<div class="vlist">' + p.ok.map(v => '<button class="vchip' + (virusRow(v) < 0 ? ' dead' : '') +
+             '">' + v + '</button>').join('') + '</div>' +
+           (p.e ? '<div class="why">' + p.e + '</div>' : '') + '</div>';
+    });
+    h += '</div>';
+  }
+  if (recalls.length) {
+    h += '<div class="blk"><h4>要点・記述キーワード</h4>';
+    recalls.forEach(r => {
+      h += '<div class="qa"><div class="qq">' + r.q + '</div><ul>' +
+           r.a.map(x => '<li>' + x + '</li>').join('') + '</ul>' +
+           (r.e ? '<div class="why">' + r.e + '</div>' : '') + '</div>';
+    });
+    h += '</div>';
+  }
+  if (oxs.length) {
+    h += '<div class="blk"><h4>ひっかけ肢</h4>';
+    oxs.forEach(o => {
+      h += '<div class="oxitem"><div class="st"><span class="jd ' + (o.a ? 'o">〇' : 'x">×') + '</span>' +
+           o.q + '</div>' + (o.e ? '<div class="why">' + o.e + '</div>' : '') + '</div>';
+    });
+    h += '</div>';
+  }
+  body.innerHTML = h;
+  body.querySelectorAll('.vchip').forEach(b => {
+    if (b.classList.contains('dead')) b.disabled = true;
+    else b.onclick = () => openVirus(b.textContent);
+  });
+  const rb = resumeBar(); if (rb) body.insertBefore(rb, body.firstChild);
+
+  const go = document.createElement('button');
+  go.className = 'act';
+  go.textContent = 'この節から出題（' + sec.items.length + '問）';
+  go.onclick = () => startSession('sec:' + curSection, sec.items.length);
+  body.appendChild(go);
+
+  const nav = document.createElement('div');
+  nav.className = 'navpair';
+  nav.innerHTML = '<button' + (curSection === 0 ? ' disabled' : '') + '>← 前の節</button>' +
+                  '<button' + (curSection === SECTIONS.length - 1 ? ' disabled' : '') + '>次の節 →</button>';
+  nav.children[0].onclick = () => { if (curSection > 0) { curSection--; show('section'); } };
+  nav.children[1].onclick = () => { if (curSection < SECTIONS.length - 1) { curSection++; show('section'); } };
+  body.appendChild(nav);
+}
+
+/* ---------- virus sheet（選択肢から縦串マトリクスの行を引く） ---------- */
+function openVirus(label) {
+  const i = virusRow(label);
+  if (i < 0) return;
+  const r = MATRIX[i];
+  const env = r[3] === '有' ? '<span class="yes">あり</span>' : (r[3] === '無' ? '<span class="no">なし</span>' : r[3]);
+  const line = (k, v) => v && v !== '—' ? '<div class="srowline"><dt>' + k + '</dt><dd>' + v + '</dd></div>' : '';
+  $('#sheetBody').innerHTML =
+    '<h5>' + r[0] + '</h5><p class="fam">' + (r[1] === '—' ? '' : r[1] + 'ウイルス科') +
+      (label !== r[0] ? '　（' + label + ' の行）' : '') + '</p>' +
+    line('ゲノム', r[2]) + line('エンベロープ', env) + line('複製部位', r[4]) +
+    line('指向性', r[5]) + line('感染経路', r[6]) +
+    '<div class="keyline">' + r[7] + '</div>' +
+    (lineFor(VIRUS_SRC[r[0]]) ? '<div class="sheet-src"><span class="lbl">出典</span>' + lineFor(VIRUS_SRC[r[0]]) + '</div>' : '') +
+    '<button class="close">閉じる</button>';
+  $('#sheetBody').querySelector('.close').onclick = closeSheet;
+  $('#sheet').classList.remove('hide');
+}
+function closeSheet() { $('#sheet').classList.add('hide'); }
+
+function virusChip(label) {
+  const b = document.createElement('button');
+  const known = virusRow(label) >= 0;
+  b.className = 'vchip' + (known ? '' : ' dead');
+  b.textContent = label;
+  if (known) b.onclick = () => openVirus(label); else b.disabled = true;
+  return b;
+}
+
+/* ---------- matrix ---------- */
+function renderMatrix() {
+  const q = $('#msearch').value.trim().toLowerCase();
+  const rows = MATRIX.filter(r => !q || r.join(' ').toLowerCase().includes(q));
+  const env = v => v === '有' ? '<span class="yes">エンベ有</span>'
+                 : v === '無' ? '<span class="no">エンベ無</span>' : '';
+
+  const b = $('#mbody');
+  b.innerHTML = '';
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+    const e = r[3] === '有' ? '<span class="yes">有</span>' : (r[3] === '無' ? '<span class="no">無</span>' : r[3]);
+    tr.innerHTML = '<th>' + r[0] + badgesFor(VIRUS_SRC[r[0]]) + '</th><td>' + r[1] + '</td><td>' + r[2] + '</td><td>' + e +
+      '</td><td>' + r[4] + '</td><td>' + r[5] + '</td><td>' + r[6] + '</td><td class="key">' + r[7] + '</td>';
+    b.appendChild(tr);
+  });
+
+  const c = $('#mcards');
+  c.innerHTML = '';
+  if (!rows.length) { c.innerHTML = '<div class="mempty">該当なし</div>'; return; }
+  rows.forEach(r => {
+    const d = document.createElement('div');
+    d.className = 'mcard';
+    const rep = r[4] === '—' ? '' : '<span>' + r[4] + '複製</span>';
+    d.innerHTML =
+      '<div class="mh"><span class="mn">' + r[0] + '</span><span class="srcs">' + badgesFor(VIRUS_SRC[r[0]]) +
+        '</span><span class="mf">' + r[1] + '</span></div>' +
+      '<div class="mattrs"><span>' + r[2] + '</span><span>' + env(r[3]) + '</span>' + rep + '</div>' +
+      '<div class="mroute">指向性：<b>' + r[5] + '</b>　／　経路：' + r[6] + '</div>' +
+      '<div class="mkey">' + r[7] + '</div>';
+    c.appendChild(d);
+  });
+}
+
+/* ---------- nav ---------- */
+const VIEWS = ['home', 'quiz', 'matrix', 'study', 'section'];
+let curView = 'home', quizOrigin = 'home';
+
+function show(v) {
+  VIEWS.forEach(x => $('#view-' + x).classList.toggle('hide', x !== v));
+  curView = v;
+  $('#back').classList.toggle('hide', v === 'home');
+  if (v === 'home') { paused = null; $('#htitle').textContent = 'ウイルス横断ドリル'; renderHome(); }
+  if (v === 'matrix') { $('#htitle').textContent = '縦串マトリクス'; renderMatrix(); }
+  if (v === 'study') { $('#htitle').textContent = '教材'; renderStudy(); }
+  if (v === 'section') renderSection();
+  window.scrollTo(0, 0);
+}
+
+$('#back').onclick = () => {
+  if (curView === 'section') show('study');
+  else if (curView === 'quiz') show(quizOrigin);
+  else show('home');
+};
+$('#tileStudy').onclick = () => show('study');
+$('#tileMatrix').onclick = () => show('matrix');
+$('#msearch').oninput = renderMatrix;
+$('#ssearch').oninput = renderStudy;
+$('#start').onclick = () => startSession('all', 10);
+document.querySelectorAll('.tile[data-mode]').forEach(b => b.onclick = () => startSession(b.dataset.mode, 10));
+$('#reset').onclick = () => { if (confirm('学習進捗をすべて消去します。よろしいですか？')) { store = { r: {}, filter: store.filter }; save(); renderHome(); } };
+
+$('#sheet').querySelector('.bg').onclick = closeSheet;
+
+document.addEventListener('keydown', e => {
+  if (!$('#sheet').classList.contains('hide')) { if (e.key === 'Escape') closeSheet(); return; }
+  if ($('#view-quiz').classList.contains('hide')) return;
+  const it = Q.queue[Q.idx];
+  if (!Q.answered && it && it.t === 'ox') {
+    if (e.key === 'o' || e.key === 'ArrowLeft' || e.key === '1') answerOX(true);
+    if (e.key === 'x' || e.key === 'ArrowRight' || e.key === '2') answerOX(false);
+  }
+  if (Q.answered && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); next(); }
+});
+
+renderChips();
+show('home');
+</script>
+</body>
+</html>
